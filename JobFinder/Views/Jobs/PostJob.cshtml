@@ -1,0 +1,313 @@
+﻿@model Job
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Post Jobs";
+    ViewData["Controller"] = "Jobs";
+    ViewData["Item"] = "Job";
+    string item = (string)ViewData["Item"]!;
+    List<Skill> skills = (List<Skill>)ViewBag.Skills ?? new List<Skill>();
+    List<Language> languages = (List<Language>)ViewBag.Languages ?? new List<Language>();
+}
+
+<!-- Dashboard -->
+<section class="user-dashboard">
+    <div class="dashboard-outer">
+        <div class="upper-title-box">
+            <h3>Post a New Job!</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Ls widget -->
+                <div class="ls-widget">
+                    <div class="tabs-box">
+                        <div class="widget-title">
+                            @*<h4>Post Job</h4>*@
+                        </div>
+
+                        <div class="widget-content">
+
+                            @*<div class="post-job-steps">
+                            <div class="step">
+                            <span class="icon flaticon-briefcase"></span>
+                            <h5>Job Detail</h5>
+                            </div>
+
+                            <div class="step">
+                            <span class="icon flaticon-money"></span>
+                            <h5>Package & Payments</h5>
+                            </div>
+
+                            <div class="step">
+                            <span class="icon flaticon-checked"></span>
+                            <h5>Confirmation</h5>
+                            </div>
+                            </div>*@
+
+                            <form action="@Url.Action("PostJob", "Jobs")" class="default-form" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-12 col-md-12">
+                                        <label>Job Title</label>
+                                        <input type="text" asp-for="Title" placeholder="Title">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-12 col-md-12">
+                                        <label>Mini Content</label>
+                                        <input type="text" asp-for="MiniContent" placeholder="Mini Content">
+                                    </div>
+
+                                    <!-- About Company -->
+                                    <div class="form-group col-lg-12 col-md-12">
+                                        <label>Job Description</label>
+                                        <textarea asp-for="Description" placeholder="Descripe Your Job"></textarea>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Job Code</label>
+                                        <input type="text" asp-for="JobCode" placeholder="">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Vacancy Count</label>
+                                        <input type="number" min="1" asp-for="VacancyCount" placeholder="Vacancy Count">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Preferred Age</label>
+                                        <input type="number" min="18" asp-for="PreferredAge" placeholder="Preferred Age">
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Job Type</label>
+                                        <select asp-for="JobType" asp-items="@Html.GetEnumSelectList<JobType>()" class="chosen-select">
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Job Level</label>
+                                        <select asp-for="JobLevel" asp-items="@Html.GetEnumSelectList<JobLevel>()" class="chosen-select">
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Job Shift</label>
+                                        <select asp-for="JobShift" asp-items="@Html.GetEnumSelectList<JobShiftPreferred>()" class="chosen-select">
+                                        </select>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Work Hours</label>
+                                        <input type="number" min="1" asp-for="WorkHours" placeholder="Work Hours">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Salary</label>
+                                        <input type="number" min="1" asp-for="Salary" placeholder="Salary">
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Gender</label>
+                                        <select asp-for="PreferredGender" asp-items="@Html.GetEnumSelectList<Gender>()" class="chosen-select">
+                                        </select>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Years Of Experience</label>
+                                        <input type="number" min="1" asp-for="PreferredYearsOfExperience" placeholder="Years Of Experience">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Approved Average</label>
+                                        <input type="number" min="1" asp-for="ApprovedAverage" placeholder="Approved Average">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-2 col-md-12 align-items-center my-auto">
+                                        <label class="switch">
+                                            <input type="checkbox" id="hasOnlineTest" asp-for="HasOnlineTest">
+                                            <span class="slider round"></span>
+                                            <span class="title">Online Test</span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-2 col-md-12 align-items-center my-auto">
+                                        <label class="switch">
+                                            <input type="checkbox" asp-for="HasTestInSite">
+                                            <span class="slider round"></span>
+                                            <span class="title">Test In Site</span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Search Select -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Skilles </label>
+                                        <select data-placeholder="Skilles" asp-for="SelectedSkills" class="chosen-select multiple" multiple="" tabindex="4">
+                                            @foreach (var skill in skills)
+                                            {
+                                                <option value="@skill.Id">@(skill.Title)</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <!-- Search Select -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Languages </label>
+                                        <select data-placeholder="Languages" asp-for="SelectedLanguages" class="chosen-select multiple" multiple="" tabindex="4">
+                                            @foreach (var language in languages)
+                                            {
+                                                <option value="@language.Id">@(language.Title)</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>From Time</label>
+                                        <input type="time" asp-for="FromTime" placeholder="From Time">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Till Time</label>
+                                        <input type="time" asp-for="TillTime" placeholder="Till Time">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label for="formFile" class="form-label">Attachments</label>
+                                        <input class="form-control" type="file" multiple asp-for="Attachments" id="formFile">
+                                    </div>
+
+                                    <div class="col-12 repeater" style="display: none" id="questionsSection">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button id="addNew" data-repeater-create type="button" class="btn btn-success property-button mo-mt-2" style="float:right"><i class="fa fa-plus"></i> Add Question</button>
+                                            </div>
+                                        </div>
+                                        <div data-repeater-list="Questions">
+                                            <div data-repeater-item class="row row-cols-2 item">
+                                                <div class="col-10 repeater-item">
+                                                    <div class="row row-cols-2 question-item">
+                                                        <div class="col-8">
+                                                            <div class="form-group">
+                                                                <label>Question Title</label>
+                                                                <input type="text" name="Question" placeholder="Question Title" required data-name="Question">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Question Type</label>
+                                                                <select class="" data-placeholder="Select Question Type" name="QuestionType" data-name="QuestionType">
+                                                                    <option value="@QuestionType.Single">Single Choice</option>
+                                                                    <option value="@QuestionType.Multiple">Multiple Choice</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label>First Answer</label>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-text">
+                                                                    <input class="form-check-input mt-0 answer-input" type="checkbox" value="true" data-name="[0].IsCorrect">
+                                                                </div>
+                                                                <input type="text" class="form-control answer-input" aria required data-name="[0].Answer">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label>Seconde Answer</label>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-text">
+                                                                    <input class="form-check-input mt-0 answer-input" type="checkbox" value="true" data-name="[1].IsCorrect">
+                                                                </div>
+                                                                <input type="text" class="form-control answer-input" aria required data-name="[1].Answer">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label>Third Answer</label>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-text">
+                                                                    <input class="form-check-input mt-0 answer-input" type="checkbox" value="true" data-name="[2].IsCorrect">
+                                                                </div>
+                                                                <input type="text" class="form-control answer-input" aria required data-name="[2].Answer">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label>Forth Answer</label>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-text">
+                                                                    <input class="form-check-input mt-0 answer-input" type="checkbox" value="true" data-name="[3].IsCorrect">
+                                                                </div>
+                                                                <input type="text" class="form-control answer-input" aria required data-name="[3].Answer">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2 my-auto d-flex justify-content-center">
+                                                    <span data-repeater-delete class="text-danger"><i class="fa fa-trash"></i></span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <hr>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-12 col-md-12 text-right">
+                                        <button class="theme-btn btn-style-one">Post</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+<!-- End Dashboard -->
+@section Scripts {
+    <script>
+        onCreateNewItem = function (length) {
+            console.log(length);
+            var questionTypeSelect = $('.repeater').find(`[name="Questions[${length}][QuestionType]"]`).data('length', `user-item-${length}`);
+            //var userSelect = $('.repeater').find(`[name="ProcessPhases[${length}][UserId]"]`).addClass(`user-item-${length}`);
+            //var alternativeRoleSelect = $('.repeater').find(`[name="ProcessPhases[${length}][AlternativeRole]"]`).data('length', `user-item-${length}`);
+            //var alternativeUserSelect = $('.repeater').find(`[name="ProcessPhases[${length}][AlternativeUserId]"]`).addClass(`user-item-${length}`);
+            questionTypeSelect.chosen({
+                disable_search_threshold: 10,
+                width: '100%',
+            });
+            var repeaterItem = questionTypeSelect.parents('.repeater-item');
+            $('.question-item').each(function (questionIndex, question) {
+                $(question).find('.answer-input').each(function (answerIndex, answer) {
+                    $(answer).attr("name", `Questions[${questionIndex}].JobQuestionAnswers${$(this).data('name')}`)
+                });
+            })
+            //roleSelect.select2();
+            //userSelect.select2();
+            //alternativeRoleSelect.select2();
+            //alternativeUserSelect.select2();
+        }
+        GenerateRepeater($('.repeater'), onCreateNewItem, null, false, true, false, 20);
+        $('#hasOnlineTest').on('change', function(){
+            if($(this).is(':checked')){
+                $('#questionsSection').show();
+            }else{
+                $('#questionsSection').hide();
+            }
+        });
+    </script>
+}

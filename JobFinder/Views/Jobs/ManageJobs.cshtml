@@ -1,0 +1,152 @@
+﻿@{
+    ViewData["Title"] = "Manage Jobs";
+    Layout = "~/Views/Shared/_list.cshtml";
+    ViewData["Controller"] = "Jobs";
+    ViewData["Item"] = "Job";
+    string item = (string)ViewData["Item"]!;
+}
+
+@if(store.RoleType is not null && store.RoleType == RoleType.Company)
+{
+    @section CreateButton {
+    <a class="btn btn-primary" asp-action="PostJob"><i class="fa fa-plus me-1"></i> Add @item</a>
+    }
+}
+
+@section DatatableOption {
+    <script>
+        DataTableOptions.ajax.beforeSend = function(xhr, settings) {
+            console.log("settings", settings)
+            if (settings.url.indexOf('?') !== -1) {
+                settings.url += `&filter.Search.CompanyId=@(store.Company?.Id.ToString() ?? "")`;
+            }else{
+                settings.url += `?filter.Search.CompanyId=@(store.Company?.Id.ToString() ?? "")`;
+            }
+        };
+        DataTableOptions.columns =
+            [
+                {
+                    'title': 'Id',
+                    'data': 'id',
+                    'name': 'Id',
+                    'visible': false
+                },
+                {
+                    'title': 'Job Title',
+                    'data': 'title',
+                    'name': 'Title',
+                },
+                {
+                    'title': 'Job Code',
+                    'data': 'jobCode',
+                    'name': 'JobCode',
+                },
+                {
+                    'title': 'Status',
+                    'data': 'isActive',
+                    'name': 'IsActive',
+                    'render': function (data, type, JsonResultRow, meta) {
+                        if (JsonResultRow.isBanned) {
+                            return `<div class="badge rounded-pill bg-danger">Banned</div>`
+                        }
+                        if (data) {
+                            return `<div class="badge rounded-pill bg-success">Active</div>`
+                        }
+                        return `<div class="badge rounded-pill bg-warning">Inactive</div>`
+                    }
+                },
+                {
+                    'title': 'Actions',
+                    'data': 'id',
+                    'name': 'Id',
+                    'render': function (data, type, JsonResultRow, meta) {
+                        var deleteButton = `<a onclick="DeleteItem('${data}')" class="item-delete datatable-option text-danger"><i class="fa fa-trash-alt fa-fw"></i></a>`;
+                        var isCurrent = JsonResultRow.isActive;
+                        var className = isCurrent ? "text-success" : "text-warning";
+                        var iClassName = isCurrent ? "fa-toggle-on" : "fa-toggle-off";
+                        var toggleCurrent = `<a onclick="ToggleActive('${data}')" class="${className} datatable-option"><i class="fa ${iClassName} fa-fw"></i></a>`
+                        var detailsButton = `<a href="@Url.Action("Details", "Jobs")/${data}" class="datatable-option"><i class="fa fa-eye fa-fw"></i></a>`
+                        var viewApplicantButton = `<a href="@Url.Action("GetApplicantJob", "Jobs")?jobId=${data}" class="datatable-option"><i class="fa fa-users fa-fw"></i></a>`
+                        if (JsonResultRow.isBanned) {
+                            return `<div class="d-inline-flex">${detailsButton}</div>`;
+                        }
+                        return `<div class="d-inline-flex">${viewApplicantButton}${deleteButton}${toggleCurrent}${detailsButton}</div>`;
+                    }
+                }
+            ]
+    </script>
+}
+
+@section Scripts {
+    <script>
+        function DeleteItem(id, isPahse) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You cannot undo after deleting",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#0CC27E',
+                cancelButtonColor: '#FF586B',
+                confirmButtonText: 'Yes',
+                cancelButtonText: "No"
+            }).then(function (isConfirm) {
+                if (isConfirm.isConfirmed) {
+                    $.ajax({
+                        url: `@Url.Action("Delete", "Jobs")?id=${id}`,
+                        type: "delete",
+                        contentType: "application/json",
+                        success: function (result) {
+                            if (result.succeeded) {
+                                Swal.fire(
+                                    'Deleted',
+                                    result.data,
+                                    'success'
+                                );
+                                Table.ajax.reload(null, false);
+                            } else {
+                                Swal.fire(
+                                    'Faild',
+                                    result.data,
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function (x, y, z) {
+                            Swal.fire(
+                                'Faild',
+                                result.data,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            }).catch(swal.noop);
+        }
+        function ToggleActive(id) {
+            $.ajax({
+                url: `@Url.Action("ToggleActive", "Jobs")?id=${id}`,
+                type: "POST",
+                contentType: "application/json",
+                success: function (result) {
+                    if (result.succeeded) {
+                        Table.ajax.reload(null, false);
+                    }else{
+                        Swal.fire(
+                            'Faild',
+                            result.data,
+                            'error'
+                        );
+                    }
+                },
+                error: function (x, y, z) {
+                    Swal.fire(
+                        'Faild',
+                        result.data,
+                        'error'
+                    );
+                }
+            });
+        }
+
+    </script>
+}

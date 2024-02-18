@@ -1,0 +1,131 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    string controller = (string)ViewData["Controller"]!;
+    string title = (string)ViewData["Title"]!;
+    string item = (string)ViewData["Item"]!;
+    string itemAr = (string)ViewData["ItemAr"]!;
+}
+
+@section CSS {
+    <link href="~/css/datatables.min.css" rel="stylesheet">
+    <link href="~/lib/sweetalert2/sweetalert2.min.css" rel="stylesheet">
+}
+
+<!-- Dashboard -->
+<section class="user-dashboard">
+    <div class="dashboard-outer">
+        <div class="upper-title-box">
+            <h3>@title</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card h-auto p-2">
+                    @*<div class="card-header">
+                        <h4>@title Filter</h4>
+                    </div>*@
+                    <div class="card-body">
+                        <div class="row justify-content-between">
+                            <div class="col-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="inputGroup-sizing-default"><i class="fa fa-search"></i></span>
+                                    <input id="searchInput" placeholder="Search..." type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                            <div class="col-2 text-end">
+                                @await RenderSectionAsync("CreateButton", false)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <!-- Ls widget -->
+                <div class="table-outer">
+                    <table id="datatable" class="default-table manage-job-table pe-0 me-0 w-100">
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+<!-- End Dashboard -->
+@RenderBody()
+
+@section Scripts {
+    <script src="~/js/datatables.min.js"></script>
+    <script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script>
+    <script>
+        let DataTableOptions = {
+            responsive: true,
+            bDestroy: true,
+            processing: true,
+            serverSide: true,
+            filter: true,
+            iDisplayLength: 10,
+            dom: 'lrtp',
+            displayLength: 10,
+            lengthMenu: [[10, 15, 20, -1], [10, 15, 20, "All"]],
+            pageLength: 10,
+            lengthChange: false,
+            width: "100%",
+            language: {
+                paginate: {
+                    // remove previous & next text from pagination
+                    previous: '<',
+                    next: '>'
+                }
+            },
+            "order": [[0, "desc"]],
+            ajax: {
+                url: '@Url.Action("GetList",controller)',
+                data: function (d) {
+                    if (d.order.length > 0) {
+                        var index = d.order[0].column;
+                        var direction = d.order[0].dir;
+                        var title = d.columns[index].name;
+                    }
+                    var order = '';
+                    return {
+                        "filter.sort": title || '',
+                        "filter.order": direction || '',
+                        "filter.pageNumber": (d.start / d.length) + 1,
+                        "filter.count": $('#count').val(),
+                        "filter.keyword": $('#searchInput').val(),
+                        "filter.search.isActive": $("#filters").val()
+                    }
+                },
+                contentType: "application/json",
+                dataSrc: function (d) {
+                    console.log(d);
+                    d.recordsFiltered = d.totalCount;
+                    d.recordsTotal = d.totalCount;
+                    return d.data;
+                },
+                error: function (data) {
+                    OnFailure(data);
+                }
+            },
+        };
+    </script>
+    @await RenderSectionAsync("DatatableOption", false)
+    <script>
+        let Table = $("#datatable").DataTable(DataTableOptions);
+        $('#searchInput').keyup(function () {
+            Table.draw();
+        });
+
+        $("#filters").change(function () {
+            Table.draw();
+        });
+        $('#count').on('change', function () {
+            //Table.ajax.reload(null, false);
+            //Table.count($(this).val()).draw();
+            //Table.rows().count(2);
+            Table.page.len($(this).val()).draw();
+        })
+    </script>
+    @await RenderSectionAsync("Scripts", false)
+}

@@ -1,0 +1,24 @@
+﻿@model Experience
+
+<form id="ajaxForm" class="default-form" data-ajax="true" data-ajax-method="post" data-ajax-success="OnSuccessUpSert" data-ajax-failure="OnFailureUpSert" asp-controller="Experiences" asp-action="Create" enctype="multipart/form-data">
+    <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+            <label>Position</label>
+            <input type="text" asp-for="JobPosition" required placeholder="Job Position">
+        </div>
+
+        <div class="form-group col-lg-6 col-md-12">
+            <label>Company Name</label>
+            <input type="text" asp-for="CompanyName" required placeholder="Company Name">
+        </div>
+
+        <div class="form-group col-lg-6 col-md-12">
+            <label>Start Date</label>
+            <input type="date" asp-for="From" required placeholder="Start">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+            <label>End Date</label>
+            <input type="date" asp-for="To" placeholder="End">
+        </div>
+    </div>
+</form>

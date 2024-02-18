@@ -1,0 +1,130 @@
+﻿@model Company
+@{
+    ViewData["Title"] = "Company Profirl";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Controller"] = "Profile";
+    ViewData["Item"] = "Test";
+}
+
+<!-- Job Detail Section -->
+<section class="job-detail-section">
+    <!-- Upper Box -->
+    <div class="upper-box p-4 pt-5">
+        <div class="auto-container">
+            <!-- Job Block -->
+            <div class="job-block-seven">
+                <div class="inner-box">
+                    <div class="content" style="height: 100px">
+                        <span class="company-logo custom-company-logo rounded-circle overflow-hidden">
+                            @if (Model.Logo.HasValue())
+                            {
+                                <img src="@(Model.Logo ?? "~/images/resource/company-logo/5-1.png")" alt="">
+                            }
+                            else
+                            {
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center" style="background-color:#ff3365;">
+                                    <span class="text-white h3">@(Model.Name![0])</span>
+                                </div>
+                            }
+                        </span>
+                        <div class="d-flex align-items-center flex-column" style="height: 100px">
+                            <h4><a href="#">@Model.Name</a></h4>
+                            <ul class="job-info">
+                                @if (Model.Phone.HasValue())
+                                {
+                                    <li><span class="icon flaticon-telephone-1"></span> @Model.Phone</li>
+                                }
+                                @if (Model.Email.HasValue())
+                                {
+                                    <li><span class="icon flaticon-mail"></span> @Model.Email</li>
+                                }
+                            </ul>
+                        </div>
+                        
+                    </div>
+
+                    <div class="btn-box">
+                        <a href="@Url.Action("EditCompanyProfile", "Profile")" class="theme-btn btn-style-one">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="job-detail-outer p-4">
+        <div class="auto-container">
+            <div class="row">
+                <div class="content-column col-lg-8 col-md-12 col-sm-12">
+                    <div class="job-detail">
+                        <h4>About Company</h4>
+                        <p>@(Model.About ?? "")</p>
+                        <div class="row images-outer">
+                            @if(Model.Galleries?.Count > 0)
+                            {
+                                @foreach(var image in Model.Galleries)
+                                {
+                                    <div class="col-lg-3 col-md-3 col-sm-6">
+                                        <figure class="image"><a href="@image.Image" class="lightbox-image" data-fancybox="gallery"><img src="@image.Image" alt=""></a></figure>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-column col-lg-4 col-md-12 col-sm-12">
+                    <aside class="sidebar">
+                        <div class="sidebar-widget company-widget">
+                            <div class="widget-content">
+
+                                <ul class="company-info mt-0">
+                                    @if (Model.Phone.HasValue())
+                                    {
+                                        <li>Phone: <span>@Model.Phone</span></li>
+                                    }
+                                    @if (Model.Mobile.HasValue())
+                                    {
+                                        <li>Mobile: <span>@Model.Mobile</span></li>
+                                    }
+                                    @if (Model.Email.HasValue())
+                                    {
+                                        <li>Email: <span>@Model.Email</span></li>
+                                    }
+                                    @if (Model.Address.HasValue())
+                                    {
+                                        <li>Location: <span>@Model.Address</span></li>
+                                    }
+                                    @if (Model.Facebook.HasValue() || Model.Twitter.HasValue() || Model.LinkedIn.HasValue())
+                                    {
+                                        <li>
+                                            Social media:
+                                            <div class="social-links">
+                                                @if (Model.Facebook.HasValue())
+                                                {
+                                                    <a href="@Model.Facebook"><i class="fab fa-facebook-f"></i></a>
+                                                }
+                                                @if (Model.Twitter.HasValue())
+                                                {
+                                                    <a href="@Model.Twitter"><i class="fab fa-twitter"></i></a>
+                                                }
+                                                @if (Model.LinkedIn.HasValue())
+                                                {
+                                                    <a href="@Model.LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                                }
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                                @if (Model.Website.HasValue())
+                                {
+                                    <div class="btn-box"><a href="@Model.Website" class="theme-btn btn-style-three">@Model.Website!.Replace("http://", "").Replace("https://", "")</a></div>
+                                }
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Job Detail Section -->

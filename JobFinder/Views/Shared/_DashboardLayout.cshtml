@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["Title"] - JobFinder</title>
+
+    <!-- Stylesheets -->
+    <link href="~/css/bootstrap.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+    <link href="~/css/responsive.css" rel="stylesheet">
+    <link href="~/css/custom.css" rel="stylesheet">
+
+    @await RenderSectionAsync("CSS", false)
+
+    <link rel="shortcut icon" href="~/images/favicon.png" type="image/x-icon">
+    <link rel="icon" href="~/images/favicon.png" type="image/x-icon">
+
+    <!-- Responsive -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
+</head>
+
+<body>
+
+
+    <div class="page-wrapper dashboard">
+
+        <div class="modal" id="upSertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">Add New Item</h5>
+                      
+                    </div>
+                    <div id="appendData" class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button id="submitButton" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Preloader -->
+        <div class="preloader"></div>
+
+        <!-- Sidebar Backdrop -->
+        <div class="sidebar-backdrop"></div>
+
+        <!-- User Sidebar -->
+        <div class="user-sidebar" style="padding-top: 40px">
+            <div class="logo-box">
+                <div class="logo text-center">
+                    <a href="index.html"><img src="images/logo.svg" alt="" title=""></a>
+                </div>
+            </div>
+            <div class="sidebar-inner">
+                <ul class="navigation">
+                    @if(store.RoleType.HasValue && store.RoleType.Equals(RoleType.Company))
+                    {
+                        <li id="CompanyProfile" class="active"><a asp-controller="Profile" asp-action="CompanyProfile"><i class="la la-user-tie"></i>Company Profile</a></li>
+                        <li id="ManageJobs"><a asp-controller="Jobs" asp-action="ManageJobs"><i class="la la-user-tie"></i>Manage Jobs</a></li>
+                        <li id="CompanyApplicants"><a asp-controller="Applicants" asp-action="CompanyApplicants"><i class="la la-user-tie"></i>All Applicants</a></li>
+                    }
+                    @if (store.RoleType.HasValue && store.RoleType.Equals(RoleType.Applicant))
+                    {
+                        <li class="active"><a asp-controller="Home" asp-action="Index"><i class="la la-briefcase"></i>Find Job</a></li>
+                        <li id="ApplicantProfile" class="active"><a asp-controller="Profile" asp-action="ApplicantProfile"><i class="la la-user-tie"></i>My Profile</a></li>
+                        <li id="ApplicantResume"><a asp-controller="Profile" asp-action="ApplicantResume"><i class="la la-briefcase"></i>My Resume</a></li>
+                        <li id="AppliedJob"><a asp-controller="Applicants" asp-action="AppliedJob"><i class="la la-user-tie"></i>Applied Jobs</a></li>
+                    }
+                    @if (store.RoleType.HasValue && store.RoleType.Equals(RoleType.Admin))
+                    {
+                        <li id="Companies" class="active"><a asp-controller="Profile" asp-action="Companies"><i class="la la-building"></i>Companies</a></li>
+                        <li id="Applicants"><a asp-controller="Profile" asp-action="Applicants"><i class="la la-users"></i>Applicants</a></li>
+                        <li id="Jobs"><a asp-controller="Profile" asp-action="Jobs"><i class="la la-briefcase"></i>Jobs</a></li>
+                        <li id="Skills"><a asp-controller="Skills" asp-action="Index"><i class="la la-cogs"></i>Skills</a></li>
+                        <li id="Languages"><a asp-controller="Languages" asp-action="Index"><i class="la la-language"></i>Languages</a></li>
+                    }
+                    <li id="CompanyProfile" class="active"><a asp-controller="Account" asp-action="Logout"><i class="la la-door-open"></i>Logout</a></li>
+                    @*<li class="active"><a href="candidate-dashboard.html"> <i class="la la-home"></i> Dashboard</a></li>
+                    <li><a href="candidate-dashboard-profile.html"><i class="la la-user-tie"></i>My Profile</a></li>
+                    <li><a href="candidate-dashboard-resume.html"><i class="la la-file-invoice"></i>My Resume</a></li>
+                    <li><a href="candidate-dashboard-applied-job.html"><i class="la la-briefcase"></i> Applied Jobs </a></li>
+                    <li><a href="candidate-dashboard-job-alerts.html"><i class="la la-bell"></i>Job Alerts</a></li>
+                    <li><a href="candidate-dashboard-shortlisted-resume.html"><i class="la la-bookmark-o"></i>Shortlisted Jobs</a></li>
+                    <li><a href="candidate-dashboard-cv-manager.html"><i class="la la-file-invoice"></i> CV manager</a></li>
+                    <li><a href="dashboard-packages.html"><i class="la la-box"></i>Packages</a></li>
+                    <li><a href="dashboard-messages.html"><i class="la la-comment-o"></i>Messages</a></li>
+                    <li><a href="dashboard-change-password.html"><i class="la la-lock"></i>Change Password</a></li>
+                    <li><a href="dashboard-profile.html"><i class="la la-user-alt"></i>View Profile</a></li>
+                    <li><a href="index.html"><i class="la la-sign-out"></i>Logout</a></li>
+                    <li><a href="dashboard-delete.html"><i class="la la-trash"></i>Delete Profile</a></li>*@
+                </ul>
+            </div>
+        </div>
+        <!-- End User Sidebar -->
+        @RenderBody()
+        <!-- Main Footer -->
+        <!-- Copyright -->
+        <div class="copyright-text">
+        </div>
+        <!-- End Main Footer -->
+
+
+    </div><!-- End Page Wrapper -->
+
+
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
+    <script src="~/js/chosen.min.js"></script>
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.fancybox.js"></script>
+    <script src="~/js/jquery.modal.min.js"></script>
+    <script src="~/js/mmenu.polyfills.js"></script>
+    <script src="~/js/mmenu.js"></script>
+    <script src="~/js/appear.js"></script>
+    <script src="~/js/anm.min.js"></script>
+    <script src="~/js/ScrollMagic.min.js"></script>
+    <script src="~/js/rellax.min.js"></script>
+    <script src="~/js/owl.js"></script>
+    <script src="~/js/wow.js"></script>
+    <script src="~/js/script.js"></script>
+    <script src="~/lib/jquery-repeater/jquery.repeater.min.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script>
+        function GenerateRepeater(Item, onCreateCallback, onDeleteCallback, initEmpty, isFirstItemUndeletable, ignorePrev, limit) {
+            Item.repeater({
+                show: function () {
+                    length = Item.find("div[data-repeater-item]").length;
+                    createButton = $('button[data-repeater-create]');
+                    if (ignorePrev) {
+                        var prevSelectedOptions = [];
+                        Item.find('select option:selected').each(function () {
+                            var d = $(this).val();
+                            prevSelectedOptions.push(d);
+                        });
+
+                        prevSelectedOptions.forEach(x => {
+                            $(this).find(`option[value="${x}"]`).remove();
+                        });
+                    }
+
+                    if (typeof onCreateCallback == 'function') {
+                        onCreateCallback(length - 1);
+                    }
+
+                    if (limit) {
+                        if (length < limit) {
+                            $(this).slideDown();
+                        }
+                        else if (length == limit) {
+                            createButton.hide();
+                            $(this).slideDown();
+                        }
+                        else {
+                            $(this).remove();
+                        }
+                    }
+                    else {
+                        $(this).slideDown();
+                    }
+                },
+                hide: function (deleteElement) {
+                    $(this).slideUp(deleteElement);
+                    $('button[data-repeater-create]').show();
+                    if (typeof onDeleteCallback == 'function') {
+                        onDeleteCallback();
+                    }
+
+                },
+                ready: function (setIndexes) {
+                    //var select = Item.find('select');
+                    //select.each(function () {
+                    //    $(this).attr('name', $(this).data('name'));
+                    //});
+                    //$(this).find('select.newSelect2').select2({
+                    //    'width': '100%',
+                    //    'placeholder': '--Please Select--'
+                    //});
+
+                },
+                initEmpty: initEmpty || true,
+                isFirstItemUndeletable: isFirstItemUndeletable || true
+            });
+        }
+        function GetView(viewName = '', id = '', isDetails = false, stringId = '') {
+            $.get('@(Url.Action("GetView", "View"))', { 'query.id': id, 'query.component': viewName, 'query.isDetails': isDetails }, function (result) {
+                $('#appendData').empty().append(result);
+                
+                $('#upSertModal').modal('show');
+            }).fail(function () {
+                alert('Somthing went wrong, Please try agin later');
+            });
+        }
+        $(document).ready(function(){
+            var pathName = location.pathname;
+            $('.navigation').find('li').removeClass('active');
+            if (pathName.endsWith("CompanyProfile")){
+                $('#CompanyProfile').addClass('active');
+            } else if (pathName.includes("Jobs")) {
+                $('#ManageJobs').addClass('active');
+                $('#Jobs').addClass('active');
+            } else if (pathName.endsWith("CompanyApplicants")) {
+                $('#CompanyApplicants').addClass('active');
+            } else if (pathName.endsWith("ApplicantProfile")) {
+                $('#ApplicantProfile').addClass('active');
+            }else if (pathName.endsWith("ApplicantResume")) {
+                $('#ApplicantResume').addClass('active');
+            } else if (pathName.endsWith("AppliedJob")) {
+                $('#AppliedJob').addClass('active');
+            }else if (pathName.includes("ShowApplicant")) {
+                $('#CompanyApplicants').addClass('active');
+                $('#Applicants').addClass('active');
+            }else if (pathName.endsWith("Applicants")) {
+                $('#Applicants').addClass('active');
+            } else if (pathName.endsWith("Companies")) {
+                $('#Companies').addClass('active');
+            }else if (pathName.includes("ShowCompanyProfile")) {
+                $('#Companies').addClass('active');
+            } else if (pathName.endsWith("Jobs")) {
+                $('#Jobs').addClass('active');
+            } else if (pathName.endsWith("Languages")) {
+                $('#Languages').addClass('active');
+            } else if (pathName.endsWith("Skills")) {
+                $('#Skills').addClass('active');
+            }
+        })
+    </script>
+
+    @await RenderSectionAsync("Scripts", false)
+</body>
+
+</html>

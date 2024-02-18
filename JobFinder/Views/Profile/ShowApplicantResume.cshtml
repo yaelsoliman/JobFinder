@@ -1,0 +1,270 @@
+﻿@model Applicant
+@{
+    ViewData["Title"] = "Applicant Resume";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Controller"] = "Profile";
+    ViewData["Item"] = "Profile";
+}
+
+<!-- Dashboard -->
+<section class="user-dashboard">
+    <div class="dashboard-outer">
+        <div class="upper-title-box">
+            <h3>My Resume</h3>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Ls widget -->
+                <div class="ls-widget">
+                    <div class="tabs-box">
+                        <div class="widget-title">
+                        </div>
+
+                        <div class="widget-content">
+                            <div class="row">
+
+                                <div class="form-group col-lg-12 col-md-12">
+                                    <!-- Resume / Education -->
+                                    <div class="resume-outer">
+                                        <div class="upper-title">
+                                            <h4>Education</h4>
+                                        </div>
+                                        <div id="educationSection">
+                                            <!-- Resume BLock -->
+                                            @if (Model.Educations?.Count > 0)
+                                            {
+                                                @foreach (var education in Model.Educations)
+                                                {
+                                                    <div class="resume-block" id="@education.Id">
+                                                        <div class="inner">
+                                                            <span class="name">@education.Title[0]</span>
+                                                            <div class="title-box">
+                                                                <div class="info-box">
+                                                                    <h3>@(education.Title ?? "")</h3>
+                                                                    <span>@(education.Provider ?? "")</span>
+                                                                </div>
+                                                                <div class="edit-box">
+                                                                    <span class="year">@(education.Start.ToString("dd/MM/yyyy")) - @(education.End.HasValue ? education.End.Value.ToString("dd/MM/yyyy") : "Present")</span>
+                                                                    <div class="edit-btns">
+                                                                        <button data-controller="Educations" data-id="@education.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">Education Level: @education.EducationLevel.ToString()</div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Resume / Work & Experience -->
+                                    <div class="resume-outer theme-blue">
+                                        <div class="upper-title">
+                                            <h4>Work & Experience</h4>
+                                        </div>
+                                        <div id="experienceSection">
+                                            @if (Model.Experiences?.Count > 0)
+                                            {
+                                                @foreach (var experience in Model.Experiences)
+                                                {
+                                                    <!-- Resume BLock -->
+                                                    <div class="resume-block" id="@experience.Id">
+                                                        <div class="inner">
+                                                            <span class="name">S</span>
+                                                            <div class="title-box">
+                                                                <div class="info-box">
+                                                                    <h3>@(experience.JobPosition ?? "")</h3>
+                                                                    <span>@(experience.CompanyName ?? "")</span>
+                                                                </div>
+                                                                <div class="edit-box">
+                                                                    <span class="year">@(experience.From.ToString("dd/MM/yyyy")) - @(experience.To.HasValue ? experience.To.Value.ToString("dd/MM/yyyy") : "Present")</span>
+                                                                    <div class="edit-btns">
+                                                                        <button data-controller="Experiences" data-id="@experience.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Resume / Certificates -->
+                                    <div class="resume-outer theme-yellow">
+                                        <div class="upper-title">
+                                            <h4>Certificates</h4>
+                                        </div>
+                                        <div id="certificateSection">
+                                            @if (Model.Certificates?.Count > 0)
+                                            {
+                                                @foreach (var certificate in Model.Certificates)
+                                                {
+                                                    <!-- Resume BLock -->
+                                                    <div class="resume-block" id="@certificate.Id">
+                                                        <div class="inner">
+                                                            <span class="name">S</span>
+                                                            <div class="title-box">
+                                                                <div class="info-box">
+                                                                    <h3>@(certificate.Title ?? "")</h3>
+                                                                    <span>@(certificate.Provider ?? "")</span>
+                                                                </div>
+                                                                <div class="edit-box">
+                                                                    <span class="year">@(certificate.CertifiedAt.ToString("dd/MM/yyyy"))</span>
+                                                                    <div class="edit-btns">
+                                                                        <button data-controller="Certificates" data-id="@certificate.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <!-- Resume / References -->
+                                    <div class="resume-outer theme-green">
+                                        <div class="upper-title">
+                                            <h4>References</h4>
+                                        </div>
+                                        <div id="referenceSection">
+                                            @if (Model.References?.Count > 0)
+                                            {
+                                                @foreach (var reference in Model.References)
+                                                {
+                                                    <!-- Resume BLock -->
+                                                    <div class="resume-block" id="@reference.Id">
+                                                        <div class="inner">
+                                                            <span class="name">S</span>
+                                                            <div class="title-box">
+                                                                <div class="info-box">
+                                                                    <h3>@(reference.Name ?? "")</h3>
+                                                                    <span>@(reference.Phone ?? "")</span>
+                                                                </div>
+                                                                <div class="edit-box">
+                                                                    <span class="year">@(reference.ReferencedAt?.ToString("dd/MM/yyyy"))</span>
+                                                                    <div class="edit-btns">
+                                                                        <button data-controller="References" data-id="@reference.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">
+                                                                @if (reference.Mobile.HasValue())
+                                                                {
+                                                                    <p>Mobile: @reference.Mobile</p>
+                                                                }
+                                                                @if (reference.Email.HasValue())
+                                                                {
+                                                                    <p>Email: @reference.Email</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <!-- Resume / Projects -->
+                                    <div class="resume-outer theme-cyan">
+                                        <div class="upper-title">
+                                            <h4>Projects</h4>
+                                        </div>
+                                        <div id="projectSection">
+                                            @if (Model.Projects?.Count > 0)
+                                            {
+                                                @foreach (var project in Model.Projects)
+                                                {
+                                                    <!-- Resume BLock -->
+                                                    <div class="resume-block" id="@project.Id">
+                                                        <div class="inner">
+                                                            <span class="name">S</span>
+                                                            <div class="title-box">
+                                                                <div class="info-box">
+                                                                    <h3>@(project.Title ?? "")</h3>
+                                                                    <span>
+                                                                        @if (project.Website.HasValue())
+                                                                        {
+                                                                            <a href="@project.Website">@project.Website</a>
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                                <div class="edit-box">
+                                                                    <span class="year">@(project.From.ToString("dd/MM/yyyy")) - @(project.To.HasValue ? project.To.Value.ToString("dd/MM/yyyy") : "Present")</span>
+                                                                    <div class="edit-btns">
+                                                                        <button data-controller="Projects" data-id="@project.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">
+                                                                @if (project.Description.HasValue())
+                                                                {
+                                                                    <p>@project.Description</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Search Select -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Skilles </label>
+                                    <ol>
+                                        @foreach (var skill in Model.ApplicantSkills)
+                                        {
+                                            <li style="list-style: initial">@(skill.Skill.Title)</li>
+                                        }
+                                    </ol>
+                                </div>
+
+                                <!-- Search Select -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Languages </label>
+                                    <ol>
+                                        @foreach (var language in Model.ApplicantLanguages)
+                                        {
+                                            <li style="list-style: initial">@(language.Language.Title)</li>
+                                        }
+                                    </ol>
+                                </div>
+
+                                @*   <!-- Search Select -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                <label>Skills </label>
+                                <select data-placeholder="Categories" class="chosen-select multiple" multiple="" tabindex="4">
+                                <option value="Banking">Banking</option>
+                                <option value="Digital&Creative">Digital & Creative</option>
+                                <option value="Retail">Retail</option>
+                                <option value="Human Resources">Human Resources</option>
+                                <option value="Management">Management</option>
+                                </select>
+                                </div>*@
+
+                                <!-- Input -->
+                            </div>
+                        </div>
+                        <div class="widget-title">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+<!-- End Dashboard -->
+
+@section Scripts {
+    <script>
+        $('.select2-select').select2();
+    </script>
+}

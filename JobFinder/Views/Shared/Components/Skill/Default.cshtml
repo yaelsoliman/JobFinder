@@ -1,0 +1,10 @@
+﻿@model Skill
+
+<form id="ajaxForm" class="default-form" data-ajax="true" data-ajax-method="post" data-ajax-success="OnSuccessUpSert" data-ajax-failure="OnFailureUpSert" asp-controller="Skills" asp-action="Create" enctype="multipart/form-data">
+    <div class="row">
+        <div class="form-group col-lg-12 col-md-12">
+            <label>Title</label>
+            <input type="text" asp-for="Title" required placeholder="Title">
+        </div>
+    </div>
+</form>

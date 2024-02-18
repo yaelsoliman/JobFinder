@@ -1,0 +1,257 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    ViewData["Controller"] = "Home";
+    string controller = (string?)ViewData["Controller"] ?? "Home";
+    var skills = (List<Skill>)ViewBag.Skills ?? new List<Skill>();
+    var languages = (List<Language>)ViewBag.Languages ?? new List<Language>();
+}
+
+<!--Page Title-->
+<section class="page-title">
+    <div class="auto-container">
+        <div class="title-outer">
+            <h1>Find Jobs</h1>
+            
+        </div>
+    </div>
+</section>
+<!--End Page Title-->
+<!-- Listing Section -->
+<section class="ls-section">
+    <div class="auto-container">
+        <div class="filters-backdrop"></div>
+
+        <div class="row">
+
+            <!-- Filters Column -->
+            <div class="filters-column col-lg-4 col-md-12 col-sm-12">
+                <div class="inner-column">
+                    <div class="filters-outer">
+                        <button type="button" class="theme-btn close-filters">X</button>
+
+                        <!-- Filter Block -->
+                        <div class="filter-block">
+                            <h4>Search by Keywords</h4>
+                            <div class="form-group">
+                                <input type="text" id="keywordInput" name="listing-search" placeholder="Job title">
+                                <span class="icon flaticon-search-3"></span>
+                            </div>
+                        </div>
+
+                        <!-- Filter Block -->
+                        <div class="filter-block">
+                            <h4>Job Type</h4>
+                            <div class="form-group">
+                                <select id="jobTypeSelect" class="chosen-select" asp-items="@Html.GetEnumSelectList<JobType>()">
+                                    <option value="null" selected>Select Job Type</option>
+                                </select>
+                                <span class="icon flaticon-briefcase"></span>
+                            </div>
+                        </div>
+
+                        <!-- Filter Block -->
+                        <div class="filter-block">
+                            <h4>Job Shift</h4>
+                            <div class="form-group">
+                                <select id="jobShiftSelect" class="chosen-select" asp-items="@Html.GetEnumSelectList<JobShiftPreferred>()">
+                                    <option value="null" selected>Select Job Shift</option>
+                                </select>
+                                <span class="icon flaticon-briefcase"></span>
+                            </div>
+                        </div>
+
+                        <!-- Filter Block -->
+                        <div class="filter-block">
+                            <h4>Job Level</h4>
+                            <div class="form-group">
+                                <select id="jobLevelSelect" class="chosen-select" asp-items="@Html.GetEnumSelectList<JobLevel>()">
+                                    <option value="null" selected>Select Job Level</option>
+                                </select>
+                                <span class="icon flaticon-briefcase"></span>
+                            </div>
+                        </div>
+
+                        <!-- Filter Block -->
+                        <div class="filter-block">
+                            <h4>Skills</h4>
+                            <div class="form-group">
+                                <select id="skillsSelect" class="chosen-select multiple" multiple data-placeholder="Select Skills">
+                                    @foreach(var skill in skills)
+                                    {
+                                        <option value="@skill.Id">@skill.Title</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Filter Block -->
+                        <div class="filter-block">
+                            <h4>Languages</h4>
+                            <div class="form-group">
+                                <select id="languagesSelect" class="chosen-select multiple" multiple data-placeholder="Select Languges">
+                                    @foreach (var language in languages)
+                                    {
+                                        <option value="@language.Id">@language.Title</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Filter Block -->
+                        <div class="filter-block text-center">
+                            <button id="applyFilter" class="btn btn-outline-dark">Apply Filter</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Column -->
+            <div class="content-column col-lg-8 col-md-12 col-sm-12">
+                <div class="ls-outer">
+                    <button type="button" class="theme-btn btn-style-two toggle-filters">Show Filters</button>
+
+                    <!-- ls Switcher -->
+                    <div class="ls-switcher">
+                        <div class="showing-result">
+                        </div>
+                        <div class="sort-by">
+                            <select id="countPerPage" class="chosen-select">
+                                <option value="10">Show 10</option>
+                                <option value="20">Show 20</option>
+                                <option value="30">Show 30</option>
+                                <option value="40">Show 40</option>
+                                <option value="50">Show 50</option>
+                                <option value="60">Show 60</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="JobsContainer">
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav class="ls-pagination">
+                        <ul>
+                            <li class="prev"><a onclick="HandlePrevPage"><i class="fa fa-arrow-left pe-2"></i> Previous</a></li>
+                            <li class="next"><a onclick="HandleNextPage">Next <i class="fa fa-arrow-right ps-2"></i></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Listing Page Section -->
+
+@section Scripts {
+    <script>
+        var currentPage = 0;
+        var currentSearch = "";
+        var currentCode = null;
+        var currentShift = null;
+        var currentLevel = null;
+        var currentType = null;
+        var currentSkills = null;
+        var currentLanguges = null;
+        var hasNexPage = false;
+        var hasPrevPage = false;
+
+        function getJobs(page, keyword, jobCode, jobShift, jobLevel, jobType, skills, languages) {
+            var filterQuery = {
+                "filter.keyword": keyword,
+                "filter.page": page,
+                "filter.count": $('#countPerPage').val(),
+                "filter.search.jobCode": jobCode,
+                "filter.search.jobShift": jobShift,
+                "filter.search.jobLevel": jobLevel,
+                "filter.search.jobType": jobType,
+                "filter.search.skills": skills,
+                "filter.search.languages": languages,
+            };
+
+            if (currentSearch != keyword || currentCode != jobCode || currentShift != jobShift || currentLevel != jobLevel || currentType != jobType || currentSkills != skills || currentLanguges != languages) {
+                page = 1;
+            }
+
+            currentSearch = keyword;
+            currentCode = jobCode;
+            currentShift = jobShift;
+            currentLevel = jobLevel;
+            currentType = jobType;
+            currentSkills = skills;
+            currentLanguges = languages;
+            currentPage = page;
+
+            $.ajax({
+                url: "@Url.Action("GetJobs", "Home")",
+                method: "POST",
+                data: filterQuery
+            }).done(function (result) {
+                console.log("result", result)
+                hasNexPage = result.hasNexPage;
+                hasPrevPage = result.hasPreviousPage;
+                $('#JobsContainer').empty()
+                $.each(result.data, function(index, item){
+                    $('#JobsContainer').append(RenderJobItem(item));
+                });
+            });
+        }
+
+        function RenderJobItem(job) {
+            var image = job.company.logo ? `<img src="${job.company.logo}" alt="">`
+                : `<span>${job.company.name[0]}</span>`
+
+            var langugesString = ""
+
+            var languges = job.languages.forEach(item => {
+                langugesString += `<li class="me-3 ps-0">${item.language.title}</li>\n`;
+            });
+
+            var skillsString = ""
+
+            var skills = job.skills.forEach(item => {
+                skillsString += `<li class="time">${item.skill.title}</li>\n`;
+            });
+            return `
+                     <!-- Job Block -->
+                    <div class="job-block">
+                        <div class="inner-box">
+                            <div class="content">
+                                <span class="company-logo d-flex align-items-center justify-content-center" style="width: 50px;height: 50px;border: 1px solid #000000;border-radius: 12px;">${image}</span>
+                                        <h4 class="mb-0"><a href="@Url.Action("JobDetails", "Home")/${job.id}">${job.title}</a></h4>
+                                <p class="mb-1">${job.title}</p>
+                                <ul class="job-info">
+                                    ${langugesString}
+                                </ul>
+                                <ul class="job-other-info">
+                                    ${skillsString}
+                                </ul>
+                                        ${job.isMatchApplicantProfile ? '<span class="bookmark-btn w-auto text-success text-bold">Your Profile Matches This Job <span class="flaticon-checked"></span></span>' : ''}
+                            </div>
+                        </div>
+                    </div>
+            `
+        }
+
+        function HandleNextPage(){
+            if (hasNexPage){
+                currentPage = currentPage + 1;
+                getJobs(currentPage, currentSearch, currentCode, currentShift, currentLevel, currentType, currentSkills, currentLanguges);
+            }
+        }
+
+        function HandlePrevPage() {
+            if (hasPrevPage) {
+                currentPage = currentPage - 1;
+                getJobs(currentPage, currentSearch, currentCode, currentShift, currentLevel, currentType, currentSkills, currentLanguges);
+            }
+        }
+
+        $('#applyFilter').on('click', function(){
+            getJobs(currentPage, $('#keywordInput').val(), currentCode, $('#jobShiftSelect').val(), $('#jobLevelSelect').val(), $('#jobTypeSelect').val(), $('#skillsSelect').val(), $('#languagesSelect').val());
+        });
+
+        getJobs(currentPage, currentSearch, currentCode, currentShift, currentLevel, currentType, currentSkills, currentLanguges);
+    </script>
+}

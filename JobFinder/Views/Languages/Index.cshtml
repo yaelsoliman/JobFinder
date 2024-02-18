@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "Languages";
+    Layout = "~/Views/Shared/_list.cshtml";
+    ViewData["Controller"] = "Languages";
+    ViewData["Item"] = "Language";
+    string item = (string)ViewData["Item"]!;
+}
+
+
+@if(store.RoleType is not null && store.RoleType == RoleType.Admin)
+{
+    @section CreateButton {
+    <a class="btn btn-primary" onclick="GetView('Language')"><i class="fa fa-plus me-1"></i> Add @item</a>
+    }
+}
+
+
+@section DatatableOption {
+    <script>
+        DataTableOptions.ajax.url = '@Url.Action("GetList", "Languages")'
+
+        DataTableOptions.columns =
+            [
+                {
+                    'title': 'Id',
+                    'data': 'id',
+                    'name': 'Id',
+                    'visible': false
+                },
+                {
+                    'title': 'Title',
+                    'data': 'title',
+                    'name': 'Title',
+                },
+                {
+                    'title': 'Actions',
+                    'data': 'id',
+                    'name': 'Id',
+                    'render': function (data, type, JsonResultRow, meta) {
+                        var deleteButton = `<a onclick="DeleteItem('${data}')" class="item-delete datatable-option text-danger"><i class="fa fa-trash-alt fa-fw"></i></a>`;
+                        return `<div class="d-inline-flex">${deleteButton}</div>`;
+                    }
+                }
+            ]
+    </script>
+}
+
+
+@section Scripts {
+    <script>
+        function DeleteItem(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You cannot undo after deleting",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#0CC27E',
+                cancelButtonColor: '#FF586B',
+                confirmButtonText: 'Yes',
+                cancelButtonText: "No"
+            }).then(function (isConfirm) {
+                if (isConfirm.isConfirmed) {
+                    $.ajax({
+                        url: `@Url.Action("Delete", "Languages")?id=${id}`,
+                        type: "delete",
+                        contentType: "application/json",
+                        success: function (result) {
+                            if (result.succeeded) {
+                                Swal.fire(
+                                    'Deleted',
+                                    result.data,
+                                    'success'
+                                );
+                                Table.ajax.reload(null, false);
+                            } else {
+                                Swal.fire(
+                                    'Faild',
+                                    result.data,
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function (x, y, z) {
+                            Swal.fire(
+                                'Faild',
+                                result.data,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            }).catch(swal.noop);
+        }
+        $('#submitButton').on('click', function () {
+            $('#ajaxForm').submit();
+        });
+        OnSuccessUpSert = (result) => {
+            if (result.succeeded == true) {
+                Table.ajax.reload(null, false);
+                $('.close-modal').click()
+            }
+        }
+
+        OnFailureUpSert = function () {
+            alert('somthing went wrong');
+            $('.close-modal').click()
+        }
+    </script>
+}

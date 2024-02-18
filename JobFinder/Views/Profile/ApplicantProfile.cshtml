@@ -1,0 +1,121 @@
+﻿@model Applicant
+@{
+    ViewData["Title"] = "Applicant Profile";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Controller"] = "Profile";
+    ViewData["Item"] = "Profile";
+}
+
+<section class="user-dashboard">
+    <div class="dashboard-outer">
+        <div class="upper-title-box">
+            <h3>My Profile</h3>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Ls widget -->
+                <div class="ls-widget">
+                    <div class="tabs-box">
+                        @*<div class="widget-title">*@
+                            @*<div class="content" style="height: 100px">
+                                <span class="company-logo custom-company-logo rounded-circle overflow-hidden">
+                                    @if (Model.Image.HasValue())
+                                    {
+                                        <img src="@(Model.Image ?? "~/images/resource/company-logo/5-1.png")" alt="">
+                                    }
+                                    else
+                                    {
+                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center" style="background-color:#ff3365;">
+                                            <span class="text-white h3">@(Model.Name![0])</span>
+                                        </div>
+                                    }
+                                </span>
+                                <div class="d-flex align-items-center flex-column" style="height: 100px">
+                                    <h4><a href="#">Invision</a></h4>
+                                    <ul class="job-info">
+                                        @if (Model.Phone.HasValue())
+                                        {
+                                            <li><span class="icon flaticon-telephone-1"></span> @Model.Phone</li>
+                                        }
+                                        @if (Model.Email.HasValue())
+                                        {
+                                            <li><span class="icon flaticon-mail"></span> @Model.Email</li>
+                                        }
+                                    </ul>
+                                </div>
+
+                            </div>*@
+                        @*</div>*@
+
+                        <div class="widget-content">
+
+                            <div class="applicant-profile-header">
+                                <div>
+                                    <div class="image-container">
+                                        @if (Model.Image.HasValue())
+                                        {
+                                            <img src="@(Model.Image ?? "~/images/resource/company-logo/5-1.png")" alt="">
+                                        }
+                                        else
+                                        {
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center" style="background-color:#ff3365;">
+                                                <span class="text-white h3">@(Model.Name![0])</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="ps-4 flex-grow-1">
+                                    <h5 class="pb-1">@Model.Name</h5>
+                                    <ul class="">
+                                        @if (Model.Phone.HasValue())
+                                        {
+                                            <li><span class="icon flaticon-telephone-1"></span> @Model.Phone</li>
+                                        }
+                                        @if (Model.Mobile.HasValue())
+                                        {
+                                            <li><span class="icon flaticon-mobile"></span> @Model.Mobile</li>
+                                        }
+                                        @if (Model.Email.HasValue())
+                                        {
+                                            <li><span class="icon flaticon-mail"></span> @Model.Email</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="btn-box">
+                                    <a href="@Url.Action("EditApplicantProfile", "Profile")" class="theme-btn btn-style-one">Edit Profile</a>
+                                </div>
+                            </div>
+
+                            <div>
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>Gender</td>
+                                            <td>@Model.Gender.ToString()</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Date Of Birth</td>
+                                            <td>@Model.DOB.ToString("dd/MM/yyyy")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Military Status </td>
+                                            <td>@Model.MilitaryStatus.ToString()</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Job Level </td>
+                                            <td>@Model.JobLevel.ToString()</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Preferred Shift </td>
+                                            <td>@Model.JobShiftPreferred.ToString()</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

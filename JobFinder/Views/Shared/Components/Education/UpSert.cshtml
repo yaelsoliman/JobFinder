@@ -1,0 +1,30 @@
+﻿@model Education
+
+<form id="ajaxForm" class="default-form" data-ajax="true" data-ajax-method="post" data-ajax-success="OnSuccessUpSert" data-ajax-failure="OnFailureUpSert" asp-controller="Educations" asp-action="Create" enctype="multipart/form-data">
+    <div class="row">
+        <div class="form-group col-lg-6 col-md-12">
+            <label>Name</label>
+            <input type="text" asp-for="Title" required placeholder="Title">
+        </div>
+
+        <div class="form-group col-lg-6 col-md-12">
+            <label>Provider</label>
+            <input type="text" asp-for="Provider" required placeholder="Provider">
+        </div>
+
+        <!-- Input -->
+        <div class="form-group col-lg-6 col-md-12">
+            <label>Education Level</label>
+            <select class="chosen-select" required asp-for="EducationLevel" asp-items="@Html.GetEnumSelectList<EducationLevel>()"></select>
+        </div>
+        <div class="col-6"></div>
+        <div class="form-group col-lg-6 col-md-12">
+            <label>Start Date</label>
+            <input type="date" asp-for="Start" required placeholder="Start">
+        </div>
+        <div class="form-group col-lg-6 col-md-12">
+            <label>End Date</label>
+            <input type="date" asp-for="End" placeholder="End">
+        </div>
+    </div>
+</form>

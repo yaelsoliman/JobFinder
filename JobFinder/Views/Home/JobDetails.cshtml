@@ -1,0 +1,133 @@
+﻿@model Job
+@{
+    ViewData["Title"] = "Job Details";
+    ViewData["Controller"] = "Home";
+    string controller = (string?)ViewData["Controller"] ?? "Home";
+}
+
+<!-- Job Detail Section -->
+<section class="job-detail-section">
+    <!-- Upper Box -->
+    <div class="upper-box">
+        <div class="auto-container">
+            <!-- Job Block -->
+            <div class="job-block-seven">
+                <div class="inner-box">
+                    <div class="content">
+                        <span class="company-logo d-flex align-items-center justify-content-center" style="width: 50px;height: 50px;border: 1px solid #000000;border-radius: 12px;">
+                            @if (Model.Company.Logo.HasValue())
+                            {
+                                <img src="@Model.Company?.Logo" alt="">
+                            }
+                            else
+                            {
+                                <span>@Model.Company.Name[0]</span>
+                            }
+                        </span>
+                        <h4><a href="#">@Model.Title</a></h4>
+                        <ul class="job-other-info">
+                            <li class="time">Job Shift: @Model.JobShift.ToString()</li>
+                            <li class="privacy">Job Tyoe: @Model.JobType</li>
+                            <li class="required">Job Level: @Model.JobLevel</li>
+                        </ul>
+                    </div>
+
+                    <div class="btn-box">
+                        <a href="@(Model.IsCurrentUserApplied ? "#" : Url.Action("ApplyForJob", "Home"))/@(Model.IsCurrentUserApplied ? "" : Model.Id.ToString())" class="theme-btn btn-style-one">Apply For Job</a>
+                        <button class="bookmark-btn"><i class="flaticon-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="job-detail-outer">
+        <div class="auto-container">
+            <div class="row">
+                <div class="content-column col-lg-8 col-md-12 col-sm-12">
+                    <div class="job-detail">
+                        <h4>Job Description</h4>
+                        <p>@Model.Description</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-column col-lg-4 col-md-12 col-sm-12">
+                    <aside class="sidebar">
+                        <div class="sidebar-widget">
+                            <!-- Job Overview -->
+                            <h4 class="widget-title">Job Overview</h4>
+                            <div class="widget-content">
+                                <ul class="job-overview">
+                                    <li>    
+                                        <i class="icon icon-calendar"></i>
+                                        <h5>Date Posted:</h5>
+                                        <span>@Model.CreatedOn.ToString("dd/MM/yyyy")</span>
+                                    </li>
+                                    <li>
+                                        <i class="icon icon-user-2"></i>
+                                        <h5>Vacancy Count:</h5>
+                                        <span>@Model.VacancyCount</span>
+                                    </li>
+                                    @if (Model.PreferredYearsOfExperience.HasValue)
+                                    {
+                                        <li>
+                                            <i class="icon icon-expiry"></i>
+                                            <h5>Years Of Experience:</h5>
+                                            <span>@(Model.PreferredYearsOfExperience)</span>
+                                        </li>
+                                    }
+                                    @if (Model.WorkHours.HasValue)
+                                    {
+                                        <li>
+                                            <i class="icon icon-clock"></i>
+                                            <h5>Hours:</h5>
+                                            <span>@(Model.WorkHours)h / day</span>
+                                        </li>
+                                    }
+                                    <li>
+                                        <i class="icon icon-expiry"></i>
+                                        <span>Online Test: @(Model.HasOnlineTest ? "YES" : "NO")</span>
+                                        <br/>
+                                        <span>Test In Site: @(Model.HasTestInSite ? "YES" : "NO")</span>
+                                    </li>
+                                    @if (Model.Salary.HasValue)
+                                    {
+                                        <li>
+
+                                            <i class="icon icon-salary"></i>
+                                            <h5>Salary:</h5>
+                                            <span>@Model.Salary.Value</span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <!-- Job Skills -->
+                            <h4 class="widget-title">Job Skills</h4>
+                            <div class="widget-content mb-4">
+                                <ul class="job-skills">
+                                    @foreach(var skill in Model.Skills)
+                                    {
+                                        <li><a href="#">@skill.Skill.Title</a></li>
+                                    }
+                                </ul>
+                            </div>
+                            <!-- Job Skills -->
+                            <h4 class="widget-title">Job Languages</h4>
+                            <div class="widget-content">
+                                <ul class="job-skills">
+                                    @foreach (var languge in Model.Languages)
+                                    {
+                                        <li><a href="#">@languge.Language.Title</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Job Detail Section -->

@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Applicants";
+    Layout = "~/Views/Shared/_list.cshtml";
+    ViewData["Controller"] = "Profile";
+    ViewData["Item"] = "Applicant";
+    string item = (string)ViewData["Item"]!;
+}
+
+@section DatatableOption {
+    <script>
+        DataTableOptions.ajax.url = '@Url.Action("GetApplicants", "Profile")'
+
+        DataTableOptions.columns =
+            [
+                {
+                    'title': 'Id',
+                    'data': 'id',
+                    'name': 'Id',
+                    'visible': false
+                },
+                {
+                    'title': 'Name',
+                    'data': 'name',
+                    'name': 'Name',
+                },
+                {
+                    'title': 'Mobile Number',
+                    'data': 'mobile',
+                    'name': 'Mobile',
+                    'render': function (data) {
+                        return data ?? "Not Set"
+                    }
+                },
+                {
+                    'title': 'Phone Number',
+                    'data': 'phone',
+                    'name': 'Phone',
+                    'render': function (data) {
+                        return data ?? "Not Set"
+                    }
+                },
+                {
+                    'title': 'Actions',
+                    'data': 'id',
+                    'name': 'Id',
+                    'render': function (data, type, JsonResultRow, meta) {
+                        var detailsButton = `<a href="@Url.Action("ShowApplicantProfile", "Profile")/${data}" class="datatable-option text-warning"><i class="fa fa-eye fa-fw"></i></a>`
+                        return `<div class="d-inline-flex">${detailsButton}</div>`;
+                    }
+                }
+            ]
+    </script>
+}
+

@@ -1,0 +1,168 @@
+﻿@{
+    ViewData["Title"] = "Manage Applicant For Job";
+    Layout = "~/Views/Shared/_list.cshtml";
+    ViewData["Controller"] = "Jobs";
+    ViewData["Item"] = "Job";
+    string item = (string)ViewData["Item"]!;
+    var x = ViewBag.JobId;
+}
+
+
+@section DatatableOption {
+    <script>
+        DataTableOptions.ajax.url = '@Url.Action("GetApplicantForJob", "Jobs")'
+        DataTableOptions.ajax.beforeSend = function (xhr, settings) {
+            console.log("settings", settings)
+            if (settings.url.indexOf('?') !== -1) {
+                settings.url += `&filter.Search.CompanyId=@(store.Company?.Id.ToString() ?? "")`;
+            } else {
+                settings.url += `?filter.Search.CompanyId=@(store.Company?.Id.ToString() ?? "")`;
+            }
+            settings.url += `&filter.Search.jobId=@ViewBag.JobId`;
+        };
+        DataTableOptions.columns =
+            [
+                {
+                    'title': 'Id',
+                    'data': 'id',
+                    'name': 'Id',
+                    'visible': false
+                },
+                {
+                    'title': 'Job Title',
+                    'data': 'job.title',
+                    'name': 'Title',
+                },
+                {
+                    'title': 'Name',
+                    'data': 'applicant.name',
+                    'name': 'Name',
+                },
+                {
+                    'title': 'Email',
+                    'data': 'applicant.email',
+                    'name': 'Email',
+                },
+                {
+                    'title': 'Mobile',
+                    'data': 'applicant.mobile',
+                    'name': 'Mobile'
+                },
+                {
+                    'title': 'Gender',
+                    'data': 'applicant.gender',
+                    'name': 'Gender'
+                },
+                {
+                    'title': 'Current Status',
+                    'data': 'currentStatus',
+                    'name': 'Phone'
+                },
+                {
+                    'title': 'Actions',
+                    'data': 'id',
+                    'name': 'Id',
+                    'render': function (data, type, JsonResultRow, meta) {
+                        var approveButton = `<a onclick="ApproveApplicant('${data}')" class="item-delete datatable-option text-success"><i class="fa fa-check fa-fw"></i></a>`;
+                        var rejectButton = `<a onclick="RejectApplicant('${data}')" class="item-delete datatable-option text-danger"><i class="fa fa-reply fa-fw"></i></a>`;
+                        if (JsonResultRow.currentStatus != "Approved" && JsonResultRow.currentStatus != "Rejected") {
+                            return `<div class="d-inline-flex">${approveButton}${rejectButton}</div>`;
+                        }else{
+                            return `<div class="d-inline-flex">-</div>`;
+                        }
+                    }
+                }
+            ]
+    </script>
+}
+
+@section Scripts {
+    <script>
+        function ApproveApplicant(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#0CC27E',
+                cancelButtonColor: '#FF586B',
+                confirmButtonText: 'Yes',
+                cancelButtonText: "No"
+            }).then(function (isConfirm) {
+                if (isConfirm.isConfirmed) {
+                    $.ajax({
+                        url: `@Url.Action("ApproveApplicant", "Jobs")?jobApplicantId=${id}`,
+                        type: "POST",
+                        contentType: "application/json",
+                        success: function (result) {
+                            if (result.succeeded) {
+                                Swal.fire(
+                                    'Approved',
+                                    result.data,
+                                    'success'
+                                );
+                                Table.ajax.reload(null, false);
+                            } else {
+                                Swal.fire(
+                                    'Faild',
+                                    result.data,
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function (x, y, z) {
+                            Swal.fire(
+                                'Faild',
+                                result.data,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            }).catch(swal.noop);
+        }
+        function RejectApplicant(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#0CC27E',
+                cancelButtonColor: '#FF586B',
+                confirmButtonText: 'Yes',
+                cancelButtonText: "No"
+            }).then(function (isConfirm) {
+                if (isConfirm.isConfirmed) {
+                    $.ajax({
+                        url: `@Url.Action("RejectApplicant", "Jobs")?jobApplicantId=${id}`,
+                        type: "POST",
+                        contentType: "application/json",
+                        success: function (result) {
+                            if (result.succeeded) {
+                                Swal.fire(
+                                    'Rejected',
+                                    result.data,
+                                    'success'
+                                );
+                                Table.ajax.reload(null, false);
+                            } else {
+                                Swal.fire(
+                                    'Faild',
+                                    result.data,
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function (x, y, z) {
+                            Swal.fire(
+                                'Faild',
+                                result.data,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            }).catch(swal.noop);
+        }
+    </script>
+}

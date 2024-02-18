@@ -1,0 +1,56 @@
+﻿.mb-20 {
+    margin-bottom: 20px !important;
+}
+
+.radio-button-role input[type="radio"] {
+    display: none;
+}
+
+.radio-button-role input[type="radio"] + label {
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+    color: #34A853;
+    background-color: #E1F2E5;
+    font-size: 16px;
+    line-height: 20px;
+    border-radius: 8px;
+    font-weight: 400;
+    padding: 15px 35px;
+}
+
+.radio-button-role input[type="radio"]:checked + label {
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+    color: #ffffff;
+    background-color: #34A853;
+    line-height: 20px;
+    border-radius: 8px;
+    font-weight: 400;
+    padding: 15px 35px;
+}
+
+.custom-company-logo {
+    width: 100px;
+    height: 100px;
+}
+
+.applicant-profile-header {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.applicant-profile-header .image-container {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.applicant-profile-header .image-container img {
+    width: 100%;
+    min-height: 130px;
+}

@@ -1,0 +1,147 @@
+﻿@model Applicant
+@{
+    ViewData["Title"] = "Edit Applicant Profile";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Controller"] = "Profile";
+    ViewData["Item"] = "Profile";
+}
+
+<section class="user-dashboard">
+    <div class="dashboard-outer">
+        <div class="upper-title-box">
+            <h3>My Profile</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Ls widget -->
+                <div class="ls-widget">
+                    <div class="tabs-box">
+                        <div class="widget-title">
+                            <h4>@Model.Name Profile</h4>
+                        </div>
+
+                        <div class="widget-content">
+
+                            <form class="default-form" action="@Url.Action("EditApplicantProfile", "Profile")" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <input type="hidden" name="Id" asp-for="Id" readonly placeholder="Applicant name">
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Name</label>
+                                        <input type="text" name="Name" asp-for="Name" readonly placeholder="Applicant name">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Email address</label>
+                                        <input type="text" name="Email" asp-for="Email" readonly placeholder="Email address">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Phone</label>
+                                        <input type="text" name="Phone" asp-for="Phone" placeholder="Phone Number">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Mobile</label>
+                                        <input type="text" name="Mobile" asp-for="Mobile" placeholder="Mobile Number">
+                                    </div>
+
+                                    <div class="col-2 form-group">
+                                        <!-- Input -->
+                                        <label>Day</label>
+                                        <select class="chosen-select" asp-for="Day">
+                                            @for (var i = 1; i <= 31; i++)
+                                            {
+                                                if (Model.DOB.Day == i)
+                                                {
+                                                    <option value="@i" selected>@i</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@i">@i</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-2 form-group">
+                                        <!-- Input -->
+                                        <label>Month</label>
+                                        <select class="chosen-select" asp-for="Month">
+                                            @for (var i = 1; i <= 12; i++)
+                                            {
+                                                if (Model.DOB.Month == i)
+                                                {
+                                                    <option value="@i" selected>@i</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@i">@i</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-2 form-group">
+                                        <!-- Input -->
+                                        <label>Year</label>
+                                        <select class="chosen-select" asp-for="Year">
+                                            @for (var i = 1990; i <= DateTime.Now.Year; i++)
+                                            {
+                                                if (Model.DOB.Year == i)
+                                                {
+                                                    <option value="@i" selected>@i</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@i">@i</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Gender</label>
+                                        <select class="chosen-select" asp-for="Gender" asp-items="@Html.GetEnumSelectList<Gender>()"></select>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Military Status</label>
+                                        <select class="chosen-select" asp-for="MilitaryStatus" asp-items="@Html.GetEnumSelectList<MilitaryStatus>()"></select>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Image</label>
+                                        <input type="file" class="form-control" aria-describedby="inputGroupFileAddon04" aria-label="Upload" asp-for="ImageFile">
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Job Level</label>
+                                        <select class="chosen-select" asp-for="JobLevel" asp-items="@Html.GetEnumSelectList<JobLevel>()"></select>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Preferred Shift</label>
+                                        <select class="chosen-select" asp-for="JobShiftPreferred" asp-items="@Html.GetEnumSelectList<JobShiftPreferred>()"></select>
+                                    </div>
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <button class="theme-btn btn-style-one">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,485 @@
+﻿@model Applicant
+@{
+    ViewData["Title"] = "Applicant Resume";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Controller"] = "Profile";
+    ViewData["Item"] = "Profile";
+    List<Skill> skills = (List<Skill>)ViewBag.Skills ?? new List<Skill>();
+    List<Language> languages = (List<Language>)ViewBag.Languages ?? new List<Language>();
+    List<Guid> applicantSkills = Model.ApplicantSkills is null ? new List<Guid>() : Model.ApplicantSkills.Where(x=>x.DeletedOn == null).Select(x => x.SkillId).ToList();
+    List<Guid> applicantLanguages = Model.ApplicantLanguages is null ? new List<Guid>() : Model.ApplicantLanguages.Where(x => x.DeletedOn == null).Select(x => x.LanguageId).ToList();
+}
+
+<!-- Dashboard -->
+<section class="user-dashboard">
+    <div class="dashboard-outer">
+        <div class="upper-title-box">
+            <h3>My Resume</h3>
+        </div>
+        <form id="resume-form" class="default-form" action="@Url.Action("EditApplicantResume", "Profile")" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Ls widget -->
+                    <div class="ls-widget">
+                        <div class="tabs-box">
+                            <div class="widget-title">
+                            </div>
+
+                            <div class="widget-content">
+                                <div class="row">
+
+                                    <div class="form-group col-lg-12 col-md-12">
+                                        <!-- Resume / Education -->
+                                        <div class="resume-outer">
+                                            <div class="upper-title">
+                                                <h4>Education</h4>
+                                                <button type="button" class="add-info-btn" onclick="GetView('Education')"><span class="icon flaticon-plus"></span> Add Education</button>
+                                            </div>
+                                            <div id="educationSection">
+                                                <!-- Resume BLock -->
+                                                @if (Model.Educations?.Count > 0)
+                                                {
+                                                    @foreach (var education in Model.Educations)
+                                                    {
+                                                        <div class="resume-block" id="@education.Id">
+                                                            <div class="inner">
+                                                                <span class="name">@education.Title[0]</span>
+                                                                <div class="title-box">
+                                                                    <div class="info-box">
+                                                                        <h3>@(education.Title ?? "")</h3>
+                                                                        <span>@(education.Provider ?? "")</span>
+                                                                    </div>
+                                                                    <div class="edit-box">
+                                                                        <span class="year">@(education.Start.ToString("dd/MM/yyyy")) - @(education.End.HasValue ? education.End.Value.ToString("dd/MM/yyyy") : "Present")</span>
+                                                                        <div class="edit-btns">
+                                                                            <button data-controller="Educations" data-id="@education.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text">Education Level: @education.EducationLevel.ToString()</div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+
+                                        </div>
+
+                                        <!-- Resume / Work & Experience -->
+                                        <div class="resume-outer theme-blue">
+                                            <div class="upper-title">
+                                                <h4>Work & Experience</h4>
+                                                <button type="button" onclick="GetView('Experience')" class="add-info-btn"><span class="icon flaticon-plus"></span> Add Work</button>
+                                            </div>
+                                            <div id="experienceSection">
+                                                @if (Model.Experiences?.Count > 0)
+                                                {
+                                                    @foreach (var experience in Model.Experiences)
+                                                    {
+                                                        <!-- Resume BLock -->
+                                                        <div class="resume-block" id="@experience.Id">
+                                                            <div class="inner">
+                                                                <span class="name">S</span>
+                                                                <div class="title-box">
+                                                                    <div class="info-box">
+                                                                        <h3>@(experience.JobPosition ?? "")</h3>
+                                                                        <span>@(experience.CompanyName ?? "")</span>
+                                                                    </div>
+                                                                    <div class="edit-box">
+                                                                        <span class="year">@(experience.From.ToString("dd/MM/yyyy")) - @(experience.To.HasValue ? experience.To.Value.ToString("dd/MM/yyyy") : "Present")</span>
+                                                                        <div class="edit-btns">
+                                                                            <button data-controller="Experiences" data-id="@experience.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Resume / Certificates -->
+                                        <div class="resume-outer theme-yellow">
+                                            <div class="upper-title">
+                                                <h4>Certificates</h4>
+                                                <button type="button" onclick="GetView('Certificate')" class="add-info-btn"><span class="icon flaticon-plus"></span> Add Certificate</button>
+                                            </div>
+                                            <div id="certificateSection">
+                                                @if (Model.Certificates?.Count > 0)
+                                                {
+                                                    @foreach (var certificate in Model.Certificates)
+                                                    {
+                                                        <!-- Resume BLock -->
+                                                        <div class="resume-block" id="@certificate.Id">
+                                                            <div class="inner">
+                                                                <span class="name">S</span>
+                                                                <div class="title-box">
+                                                                    <div class="info-box">
+                                                                        <h3>@(certificate.Title ?? "")</h3>
+                                                                        <span>@(certificate.Provider ?? "")</span>
+                                                                    </div>
+                                                                    <div class="edit-box">
+                                                                        <span class="year">@(certificate.CertifiedAt.ToString("dd/MM/yyyy"))</span>
+                                                                        <div class="edit-btns">
+                                                                            <button data-controller="Certificates" data-id="@certificate.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <!-- Resume / References -->
+                                        <div class="resume-outer theme-green">
+                                            <div class="upper-title">
+                                                <h4>References</h4>
+                                                <button type="button" onclick="GetView('Reference')" class="add-info-btn"><span class="icon flaticon-plus"></span> Add Reference</button>
+                                            </div>
+                                            <div id="referenceSection">
+                                                @if (Model.References?.Count > 0)
+                                                {
+                                                    @foreach (var reference in Model.References)
+                                                    {
+                                                        <!-- Resume BLock -->
+                                                        <div class="resume-block" id="@reference.Id">
+                                                            <div class="inner">
+                                                                <span class="name">S</span>
+                                                                <div class="title-box">
+                                                                    <div class="info-box">
+                                                                        <h3>@(reference.Name ?? "")</h3>
+                                                                        <span>@(reference.Phone ?? "")</span>
+                                                                    </div>
+                                                                    <div class="edit-box">
+                                                                        <span class="year">@(reference.ReferencedAt?.ToString("dd/MM/yyyy"))</span>
+                                                                        <div class="edit-btns">
+                                                                            <button data-controller="References" data-id="@reference.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text">
+                                                                    @if (reference.Mobile.HasValue())
+                                                                    {
+                                                                        <p>Mobile: @reference.Mobile</p>
+                                                                    }
+                                                                    @if (reference.Email.HasValue())
+                                                                    {
+                                                                        <p>Email: @reference.Email</p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <!-- Resume / Projects -->
+                                        <div class="resume-outer theme-cyan">
+                                            <div class="upper-title">
+                                                <h4>Projects</h4>
+                                                <button type="button" onclick="GetView('Project')" class="add-info-btn"><span class="icon flaticon-plus"></span> Add Project</button>
+                                            </div>
+                                            <div id="projectSection">
+                                                @if (Model.Projects?.Count > 0)
+                                                {
+                                                    @foreach (var project in Model.Projects)
+                                                    {
+                                                        <!-- Resume BLock -->
+                                                        <div class="resume-block" id="@project.Id">
+                                                            <div class="inner">
+                                                                <span class="name">S</span>
+                                                                <div class="title-box">
+                                                                    <div class="info-box">
+                                                                        <h3>@(project.Title ?? "")</h3>
+                                                                        <span>
+                                                                            @if (project.Website.HasValue())
+                                                                            {
+                                                                                <a href="@project.Website">@project.Website</a>
+                                                                            }
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="edit-box">
+                                                                        <span class="year">@(project.From.ToString("dd/MM/yyyy")) - @(project.To.HasValue ? project.To.Value.ToString("dd/MM/yyyy") : "Present")</span>
+                                                                        <div class="edit-btns">
+                                                                            <button data-controller="Projects" data-id="@project.Id" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text">
+                                                                    @if (project.Description.HasValue())
+                                                                    {
+                                                                        <p>@project.Description</p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Search Select -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Skilles </label>
+                                        <select data-placeholder="Skilles" name="SelectedSkills" class="select2 multiple w-100 skill-select" data-placeholder="Select Skill" multiple="" tabindex="4">
+                                            @foreach (var skill in skills)
+                                            {
+                                                @if (applicantSkills.Contains(skill.Id))
+                                                {
+                                                    <option selected value="@skill.Id">@(skill.Title)</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@skill.Id">@(skill.Title)</option>
+                                                }
+                                            }
+                                        </select>
+                                        <select id="newSkill" class="d-none" name="NewSkills" multiple></select>
+                                    </div>
+
+                                    <!-- Search Select -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Languages </label>
+                                        <select data-placeholder="Languages" name="SelectedLanguages" data-placeholder="Select Language" class="select2 select2-select multiple  w-100" multiple="" tabindex="4">
+                                            @foreach (var language in languages)
+                                            {
+                                                @if (applicantLanguages.Contains(language.Id))
+                                                {
+                                                    <option selected value="@language.Id">@(language.Title)</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@language.Id">@(language.Title)</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+
+                                    @*   <!-- Search Select -->
+                                    <div class="form-group col-lg-6 col-md-12">
+                                    <label>Skills </label>
+                                    <select data-placeholder="Categories" class="chosen-select multiple" multiple="" tabindex="4">
+                                    <option value="Banking">Banking</option>
+                                    <option value="Digital&Creative">Digital & Creative</option>
+                                    <option value="Retail">Retail</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Management">Management</option>
+                                    </select>
+                                    </div>*@
+
+                                    <!-- Input -->
+                                    <div class="form-group col-lg-12 col-md-12">
+                                        <button type="submit" class="theme-btn btn-style-one">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+</section>
+<!-- End Dashboard -->
+@section Scripts {
+    <script>
+        var newSkills = [];
+        $('#submitButton').on('click', function () {
+            $('#ajaxForm').submit();
+        });
+
+        $('.skill-select').select2({
+            tags: true
+        });
+
+        $('.select2-select').select2();
+
+        $('.skill-select').on('select2:select', function (e) {
+            var data = e.params.data;
+            if (data.id == data.text) {
+                newSkills.push(data.text);
+            }
+            console.log(data);
+        });
+
+        $('.skill-select').on('select2:unselect', function (e) {
+            var data = e.params.data;
+            if (data.id == data.text) {
+                if (newSkills.length > 0) {
+                    newSkills = newSkills.filter(x => x != data.text);
+                }
+            }
+        });
+
+        $('.skill-select').on('select2:clear', function (e) {
+            newSkills = [];
+        });
+
+        $('#resume-form').on('submit', function () {
+            if (newSkills.length > 0) {
+                newSkills.forEach(x => {
+                    $('#newSkill').append(new Option(x, x, true));
+                });
+                $('#newSkill').val(newSkills);
+            }
+        });
+
+        OnSuccessUpSert = function (result) {
+            console.log("result", result)
+            if (result.succeeded == true) {
+                const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+                if (result.message.toLowerCase().includes("education")) {
+                    var education = result.data;
+                    $('#educationSection').append(`
+                                                        <div class="resume-block" id="${education.id}">
+                                                    <div class="inner">
+                                                                <span class="name">${education.title[0]}</span>
+                                                        <div class="title-box">
+                                                            <div class="info-box">
+                                                                <h3>${education.title ?? ""}</h3>
+                                                                <span>${education.provider ?? ""}</span>
+                                                            </div>
+                                                            <div class="edit-box">
+                                                                <span class="year">${new Date(education.start).toLocaleDateString('en-GB', options)} - ${education.end ? new Date(education.end).toLocaleDateString('en-GB', options) : "Present"}</span>
+                                                                <div class="edit-btns">
+                                                                    <button onclick="showDeleteAlert"><span class="la la-trash"></span></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text">Education Level: ${education.educationLevel}</div>
+                                                    </div>
+                                                </div>
+                                            `);
+                }
+                else if (result.message.toLowerCase().includes("experience")) {
+                    var experience = result.data;
+                    $('#experienceSection').append(`<div class="resume-block" id="${experience.id}">
+                                                                            <div class="inner">
+                                                                                <span class="name">S</span>
+                                                                                <div class="title-box">
+                                                                                    <div class="info-box">
+                                                                                        <h3>${experience.jobPosition ?? ""}</h3>
+                                                                                        <span>${experience.companyName ?? ""}</span>
+                                                                                    </div>
+                                                                                    <div class="edit-box">
+                                                                                        <span class="year">${new Date(experience.from).toLocaleDateString('en-GB', options)} - ${experience.to ? new Date(experience.to).toLocaleDateString('en-GB', options) : "Present"}</span>
+                                                                                        <div class="edit-btns">
+                                                                                            <button data-controller="Experiences" data-id="${experience.id}" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>`);
+                }
+                else if (result.message.toLowerCase().includes("certificate")) {
+                    var certificate = result.data;
+                    $('#certificateSection').append(`<div class="resume-block" id="${certificate.id}">
+                                                                            <div class="inner">
+                                                                                <span class="name">S</span>
+                                                                                <div class="title-box">
+                                                                                    <div class="info-box">
+                                                                                        <h3>${certificate.title ?? ""}</h3>
+                                                                                        <span>${certificate.provider ?? ""}</span>
+                                                                                    </div>
+                                                                                    <div class="edit-box">
+                                                                                                <span class="year">${new Date(certificate.certifiedAt).toLocaleDateString('en-GB', options)}</span>
+                                                                                        <div class="edit-btns">
+                                                                                            <button data-controller="Certificates" data-id="${certificate.id}" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>`);
+                }
+                else if (result.message.toLowerCase().includes("reference")) {
+                    var reference = result.data;
+                    $('#referenceSection').append(`<div class="resume-block" id="${reference.id}">
+                                                                                        <div class="inner">
+                                                                                                    <span class="name">${reference.name[0]}</span>
+                                                                                            <div class="title-box">
+                                                                                                <div class="info-box">
+                                                                                                    <h3>${reference.name ?? ""}</h3>
+                                                                                                    <span>${reference.Phone ?? ""}</span>
+                                                                                                </div>
+                                                                                                <div class="edit-box">
+                                                                                                <span class="year">${new Date(reference.referencedAt).toLocaleDateString('en-GB', options)}</span>
+                                                                                                    <div class="edit-btns">
+                                                                                                        <button data-controller="References" data-id="${reference.id}" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="text">
+                                                                                            <p>${reference.mobile ? "Mobile: " + reference.mobile : ""}</p>
+                                                                                            <p>${reference.email ? "Email: " + reference.email : ""}</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>`);
+                }
+                else if (result.message.toLowerCase().includes("project")) {
+                    var project = result.data;
+                    $('#projectSection').append(`<div class="resume-block" id="${project.id}">
+                                                                                                <div class="inner">
+                                                                                                    <span class="name">${project.title[0]}</span>
+                                                                                                    <div class="title-box">
+                                                                                                        <div class="info-box">
+                                                                                                            <h3>${project.title ?? ""}</h3>
+                                                                                                            <span><a href="${project.website ?? "#"}">${project.website ?? ""}</a></span>
+                                                                                                        </div>
+                                                                                                        <div class="edit-box">
+                                                                                                            <span class="year">${new Date(project.from).toLocaleDateString('en-GB', options)} - ${project.to ? new Date(project.to).toLocaleDateString('en-GB', options) : "Present"}</span>
+                                                                                                            <div class="edit-btns">
+                                                                                                                <button data-controller="Projects" data-id="${project.id}" onclick="showDeleteAlert(this)"><span class="la la-trash"></span></button>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="text">
+                                                                                                            <p>${project.description}</p>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>`);
+                }
+
+                $('.close-modal').click()
+            }
+        }
+
+        OnFailureUpSert = function () {
+            alert('somthing went wrong');
+            $('.close-modal').click()
+        }
+
+        showDeleteAlert = (item) => {
+            var result = window.confirm("Are you sure you want to delete this item?");
+            if (result) {
+                var controller = $(item).data('controller')
+                var id = $(item).data('id')
+                handleDelete(controller, id);
+            }
+        }
+
+        handleDelete = (controller, id) => {
+            $.ajax({
+                url: '@Url.Action("Delete", "Item")'.replace('Item', controller) + '/' + id,
+                type: 'DELETE',
+
+                success: function (response) {
+                    // Handle success response
+                    $(`#${id}`).remove();
+                },
+                error: function (xhr, status, error) {
+                    // Handle error response
+                    console.error('DELETE request failed');
+                }
+            });
+        }
+
+    </script>
+}

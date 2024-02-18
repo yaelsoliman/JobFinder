@@ -1,0 +1,106 @@
+﻿@model Company
+@{
+    ViewData["Title"] = "Edit Company Profile";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Controller"] = "Profile";
+    ViewData["Item"] = "Test";
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Ls widget -->
+        <div class="ls-widget">
+            <div class="tabs-box">
+                <div class="widget-title">
+                    <h4>@Model.Name Profile</h4>
+                </div>
+
+                <div class="widget-content">
+
+                    <form class="default-form" action="@Url.Action("EditCompanyProfile", "Profile")" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <input type="hidden" name="Id" asp-for="Id" readonly placeholder="Company name">
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <label>Company name</label>
+                                <input type="text" name="Name" asp-for="Name" readonly placeholder="Company name">
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <label>Email address</label>
+                                <input type="text" name="Email" asp-for="Email" readonly placeholder="Email address">
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <label>Phone</label>
+                                <input type="text" name="Phone" asp-for="Phone" placeholder="Phone Number">
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12"> 
+                                <label>Mobile</label>
+                                <input type="text" name="Mobile" asp-for="Mobile" placeholder="Mobile Number">
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <label>Website</label>
+                                <input type="text" name="Website" asp-for="Website" placeholder="Website">
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <label>Facebook</label>
+                                <input type="text" name="Facebook" asp-for="Facebook" placeholder="Facebook">
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <label>Twitter</label>
+                                <input type="text" name="Twitter" asp-for="Twitter" placeholder="Twitter">
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <label>LinkedIn</label>
+                                <input type="text" name="LinkedIn" asp-for="LinkedIn" placeholder="LinkedIn">
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <label>Logo</label>
+                                <input type="file" class="form-control" aria-describedby="inputGroupFileAddon04" aria-label="Upload" asp-for="LogoFile">
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <label>Galleries</label>
+                                <input type="file" class="form-control" multiple aria-describedby="inputGroupFileAddon04" aria-label="Upload" asp-for="GalleryFiles">
+                            </div>
+
+                            <!-- About Company -->
+                            <div class="form-group col-lg-6 col-md-6">
+                                <label>Address</label>
+                                <textarea name="Address" asp-for="Address" rows="3"></textarea>
+                            </div>
+
+                            <!-- About Company -->
+                            <div class="form-group col-lg-6 col-md-6">
+                                <label>About Company</label>
+                                <textarea name="About" asp-for="About" rows="3"></textarea>
+                            </div>
+
+                            <!-- Input -->
+                            <div class="form-group col-lg-6 col-md-12">
+                                <button class="theme-btn btn-style-one">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿@model Job
+@{
+    ViewData["Title"] = "Home";
+    ViewData["Controller"] = "Home";
+    string controller = (string?)ViewData["Controller"] ?? "Home";
+}
+
+<!--Page Title-->
+<section class="page-title">
+    <div class="auto-container">
+        <div class="title-outer">
+            <h1>@(Model.TillTime) Online Test</h1>
+
+        </div>
+    </div>
+</section>
+<!--End Page Title-->
+<!-- Listing Section -->
+<section class="ls-section">
+    <div class="auto-container">
+        <div class="filters-backdrop"></div>
+
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+                @foreach (var question in Model.Questions)
+                {
+                    <div class="row question-item" style="margin-bottom: 30px;padding-bottom: 10px;border-bottom: 1px solid #cecece;" data-questionType="@question.QuestionType.ToString().ToLower()">
+                        <div class="col-12 pb-4">
+                            <h5>@question.Question</h5>
+                        </div>
+                        @if (question.QuestionType == QuestionType.Single)
+                        {
+                            @foreach (var answer in question.JobQuestionAnswers)
+                            {
+                                <div class="col-6">
+                                    <div class="radio-box">
+                                        <input class="answer-item" type="radio" name="question-@question.Id.ToString().Replace("-", "")" id="@answer.Id" data-answer-id="@answer.Id" data-question-id="@question.Id">
+                                        <label for="@answer.Id">@answer.Answer</label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            @foreach (var answer in question.JobQuestionAnswers)
+                            {
+                                <div class="col-6">
+                                    <ul class="checkboxes square">
+                                        <li>
+                                            <input class="answer-item" id="@answer.Id" type="checkbox" data-answer-id="@answer.Id" data-question-id="@question.Id">
+                                            <label for="@answer.Id">@answer.Answer</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+                <div class="row">
+                    <button onclick="submitTest()" class="btn btn-success">Submit Test</button>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        function submitTest() {
+            var answerList = [];
+            $('.answer-item').each(function (index, item) {
+                if ($(item).is(':checked')) {
+                    var questionId = $(item).data('question-id');
+                    var answerId = $(item).data('answer-id');
+                    answerList.push({ questionId: questionId, answerId: answerId });
+                }
+            });
+            var submitRequest = {
+                'request.jobId': '@Model.Id',
+                'request.applyJobRequest': answerList
+            }
+            $.post("@Url.Action("SubmitTest", "Home")", submitRequest)
+            .done(function(){
+                location.replace('@Url.Action("Index", "Home")');
+            })
+        }
+    </script>
+}
+<!--End Listing Page Section -->

@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "AppliedJob";
+    Layout = "~/Views/Shared/_list.cshtml";
+    ViewData["Controller"] = "Applicants";
+    ViewData["Item"] = "Applied Job";
+    string item = (string)ViewData["Item"]!;
+    string controller = (string)ViewData["Controller"]!;
+}
+
+@section DatatableOption {
+    <script>
+        DataTableOptions.ajax.url = '@Url.Action("GetAppliedJob",controller)';
+        DataTableOptions.ajax.beforeSend = function (xhr, settings) {
+            console.log("settings", settings)
+            if (settings.url.indexOf('?') !== -1) {
+                settings.url += `&filter.Search.CompanyId=@(store.Company?.Id.ToString() ?? "")`;
+            } else {
+                settings.url += `?filter.Search.CompanyId=@(store.Company?.Id.ToString() ?? "")`;
+            }
+        };
+        DataTableOptions.columns =
+            [
+                {
+                    'title': 'Id',
+                    'data': 'id',
+                    'name': 'Id',
+                    'visible': false
+                },
+                {
+                    'title': 'Job Title',
+                    'data': 'job.title',
+                    'name': 'Title',
+                },
+                {
+                    'title': 'Finished Online Test',
+                    'data': 'finishedTest',
+                    'name': 'FinishedTest',
+                    render: (data, c, full) => {
+                        console.log('full', full);
+                        return data ? 'Yes' : 'No'
+                    }
+                },
+                {
+                    'title': 'Status',
+                    'data': 'currentStatus',
+                    'name': 'Phone'
+                },
+            ]
+    </script>
+}

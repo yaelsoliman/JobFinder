@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["Title"] - JobFinder</title>
+
+    <!-- Stylesheets -->
+    <link href="~/css/bootstrap.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+    <link href="~/css/responsive.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="~/images/favicon.png" type="image/x-icon">
+    <link rel="icon" href="~/images/favicon.png" type="image/x-icon">
+
+    <!-- Responsive -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
+</head>
+
+<body data-anm=".anm">
+
+
+    <div class="page-wrapper">
+
+        <!-- Preloader -->
+        <div class="preloader"></div>
+
+
+        <!-- Header Span -->
+        <div class="header-span d-flex align-items-center justify-content-between px-5">
+            <div class="logo-box">
+                <div class="logo"><a href="index.html"><img src="~/images/logo.svg" alt="" title=""></a></div>
+            </div>
+            <div class="outer-box">
+                <!-- Add Listing -->
+                @*<a href="candidate-dashboard-cv-manager.html" class="upload-cv"> Upload your CV</a>*@
+                <!-- Login/Register -->
+                <!-- Dashboard Option -->
+                <div class="dropdown dashboard-option">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
+                        <img src="~/images/resource/company-6.png" alt="avatar" class="thumb">
+                        <span class="name">My Account</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        @if(store.RoleType is not null && store.RoleType == RoleType.Company)
+                        {
+                            <li><a asp-controller="Profile" asp-action="CompanyProfile"><i class="la la-user-tie"></i>Profile</a></li>
+                        }
+                        @if (store.RoleType is not null && store.RoleType == RoleType.Applicant)
+                        {
+                            <li><a asp-controller="Profile" asp-action="ApplicantProfile"><i class="la la-user-tie"></i>Profile</a></li>
+                        }
+                        @if (store.RoleType is not null && store.RoleType == RoleType.Company)
+                        {
+                            <li class="active"><a asp-controller="Jobs" asp-action="PostJob"><i class="la la-paper-plane"></i>Post a New Job</a></li>
+                            <li><a asp-controller="Jobs" asp-action="PostJob"><i class="la la-briefcase"></i> Manage Jobs </a></li>
+                        }
+                        <li><a asp-controller="Account" asp-action="Logout"><i class="la la-sign-out"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Header-->
+        <!--End Main Header -->
+        @RenderBody()
+        <!-- Main Footer -->
+        
+        <!-- End Main Footer -->
+
+
+    </div><!-- End Page Wrapper -->
+
+
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
+    <script src="~/js/chosen.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.fancybox.js"></script>
+    <script src="~/js/jquery.modal.min.js"></script>
+    <script src="~/js/mmenu.polyfills.js"></script>
+    <script src="~/js/mmenu.js"></script>
+    <script src="~/js/appear.js"></script>
+    <script src="~/js/anm.min.js"></script>
+    <script src="~/js/ScrollMagic.min.js"></script>
+    <script src="~/js/rellax.min.js"></script>
+    <script src="~/js/owl.js"></script>
+    <script src="~/js/wow.js"></script>
+    <script src="~/js/script.js"></script>
+
+    @await RenderSectionAsync("Scripts", false)
+</body>
+
+</html>

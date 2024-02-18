@@ -1,0 +1,216 @@
+﻿@model Job
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Job Details";
+    ViewData["Controller"] = "Jobs";
+    ViewData["Item"] = "Job";
+    string item = (string)ViewData["Item"]!;
+}
+
+<section class="user-dashboard">
+    <div class="dashboard-outer">
+        <div class="upper-title-box">
+            <h3>@Model.Title Details</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Ls widget -->
+                <div class="ls-widget">
+                    <div class="tabs-box">
+                        <div class="widget-title">
+                            @*<h4>Post Job</h4>*@
+                        </div>
+
+                        <div class="widget-content">
+                            <div class="row">
+                                <!-- Input -->
+                                <div class="form-group col-lg-12 col-md-12">
+                                    <label>Job Title</label>
+                                    <p>@(Model.Title ?? "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-12 col-md-12">
+                                    <label>Mini Content</label>
+                                    <p>@(Model.MiniContent ?? "-")</p>
+                                </div>
+
+                                <!-- About Company -->
+                                <div class="form-group col-lg-12 col-md-12">
+                                    <label>Job Description</label>
+                                    <p>@(Model.Description ?? "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Job Code</label>
+                                    <p>@(Model.JobCode ?? "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Vacancy Count</label>
+                                    <p>@(Model.VacancyCount.ToString() ?? "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Preferred Age</label>
+                                    <p>@(Model.PreferredAge?.ToString() ?? "-")</p>
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Job Type</label>
+                                    <p>@(Model.JobType.ToString() ?? "-")</p>
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Job Level</label>
+                                    <p>@(Model.JobLevel.ToString() ?? "-")</p>
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Job Shift</label>
+                                    <p>@(Model.JobShift.ToString() ?? "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Work Hours</label>
+                                    <p>@(Model.WorkHours?.ToString() ?? "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Salary</label>
+                                    <p>@(Model.Salary?.ToString() ?? "-")</p>
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Gender</label>
+                                    <p>@(Model.PreferredGender?.ToString() ?? "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Years Of Experience</label>
+                                    <p>@(Model.PreferredYearsOfExperience?.ToString() ?? "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Approved Average</label>
+                                    <p>@(Model.ApprovedAverage?.ToString() ?? "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-2 col-md-12 align-items-center my-auto">
+                                    <label class="title">Online Test</label>
+                                    <p>@(Model.HasOnlineTest ? "YES" : "NO")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-2 col-md-12 align-items-center my-auto">
+                                    <label class="title">Test In Site</label>
+                                    <p>@(Model.HasTestInSite ? "YES" : "NO")</p>
+                                </div>
+
+                                <!-- Search Select -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Skilles </label>
+                                    @if (Model.Skills?.Count > 0)
+                                    {
+                                        <p>@(string.Join(", ", Model.Skills!.Select(x => x.Skill).Select(x => x!.Title)) ?? "-")</p>
+                                    }
+                                    else
+                                    {
+                                        <p>-</p>
+                                    }
+                                </div>
+
+                                <!-- Search Select -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Languages </label>
+                                    @if (Model.Languages?.Count > 0)
+                                    {
+                                        <p>@(string.Join(", ", Model.Languages!.Select(x => x.Language).Select(x => x!.Title)) ?? "-")</p>
+                                    }
+                                    else
+                                    {
+                                        <p>-</p>
+                                    }
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>From Time</label>
+                                    <p>@(Model.FromTime.HasValue ? Model.FromTime.Value.ToLocalTime() : "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label>Till Time</label>
+                                    <p>@(Model.TillTime.HasValue ? Model.TillTime.Value.ToLocalTime() : "-")</p>
+                                </div>
+
+                                <!-- Input -->
+                                <div class="form-group col-lg-12 col-md-12">
+                                    <div class="row images-outer">
+                                        @if (Model.JobAttachments?.Count > 0)
+                                        {
+                                            @if (Model.JobAttachments.Where(x => x.AttachmentType == AttachmentType.Image).ToList().Count > 0)
+                                            {
+                                                @foreach (var image in Model.JobAttachments)
+                                                {
+                                                    <div class="col-lg-3 col-md-3 col-sm-6">
+                                                        <figure class="image"><a href="@image.AttachmentPath" class="lightbox-image" data-fancybox="gallery"><img src="@image.AttachmentPath" alt=""></a></figure>
+                                                    </div>
+                                                }
+                                            }
+                                            @if (Model.JobAttachments.Where(x => x.AttachmentType == AttachmentType.PDF).ToList().Count > 0)
+                                            {
+                                                var index = 1;
+                                                <div class="col-12">
+                                                    <ul>
+                                                        @foreach (var pdfFile in Model.JobAttachments)
+                                                        {
+                                                            <li><a href="@pdfFile" download="Attachment-@(index).pdf">Attachment-@(index).pdf</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    @if(Model.Questions?.Count > 0)
+                                    {
+                                        @foreach(var question in Model.Questions)
+                                        {
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p>@question.Question</p>
+                                                    <p>@question.QuestionType.ToString()</p>
+                                                </div>
+                                                <div class="col-12">
+                                                    <ul>
+                                                        @foreach(var answer in question?.JobQuestionAnswers)
+                                                        {
+                                                            <li class="@(answer.IsCorrect ? "text-success" : "")">@answer.Answer</li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

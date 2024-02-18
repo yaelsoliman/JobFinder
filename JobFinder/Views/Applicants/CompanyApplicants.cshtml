@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Company Applicants";
+    Layout = "~/Views/Shared/_list.cshtml";
+    ViewData["Controller"] = "Applicants";
+    ViewData["Item"] = "Company Applicant";
+    string item = (string)ViewData["Item"]!;
+    string controller = (string)ViewData["Controller"]!;
+}
+
+@section DatatableOption {
+    <script>
+        DataTableOptions.ajax.url = '@Url.Action("GetCompanyApplicant",controller)';
+        DataTableOptions.ajax.beforeSend = function (xhr, settings) {
+            console.log("settings", settings)
+            if (settings.url.indexOf('?') !== -1) {
+                settings.url += `&filter.Search.CompanyId=@(store.Company?.Id.ToString() ?? "")`;
+            } else {
+                settings.url += `?filter.Search.CompanyId=@(store.Company?.Id.ToString() ?? "")`;
+            }
+        };
+        DataTableOptions.columns =
+            [
+                {
+                    'title': 'Id',
+                    'data': 'id',
+                    'name': 'Id',
+                    'visible': false
+                },
+                {
+                    'title': 'Name',
+                    'data': 'applicant.name',
+                    'name': 'Name',
+                },
+                {
+                    'title': 'Email',
+                    'data': 'applicant.email',
+                    'name': 'Email',
+                },
+                {
+                    'title': 'Phone',
+                    'data': 'applicant.phone',
+                    'name': 'Phone'
+                },
+                {
+                    'title': 'Mobile',
+                    'data': 'applicant.mobile',
+                    'name': 'Mobile'
+                },
+                {
+                    'title': 'Gender',
+                    'data': 'applicant.gender',
+                    'name': 'Gender'
+                },
+                {
+                    'title': 'Actions',
+                    'data': 'id',
+                    'name': 'Id',
+                    'render': function (data, type, JsonResultRow, meta) {
+                        console.log(JsonResultRow);
+                        var detailsButton = `<a href="@Url.Action("ShowApplicantProfile", "Profile")/${JsonResultRow.applicantId}" class="datatable-option text-warning"><i class="fa fa-eye fa-fw"></i></a>`
+                        return `<div class="d-inline-flex">${detailsButton}</div>`;
+                    }
+                }
+            ]
+    </script>
+}
